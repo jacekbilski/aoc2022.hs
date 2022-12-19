@@ -15,16 +15,16 @@ solve day fileName = bracket (openFile fileName ReadMode) hClose
 --  in case element is empty or no more elements -> take highest from the values in the tuple
 
 day01_1 :: String -> Integer
-day01_1 input = findMaxCalories input
+day01_1 input = maximum (sumCalories input)
 
 -- For part 2 I need to go back to the original idea: simply sum the calories carried by each elf in a list.
 -- Them simply sort, revert, take 3, sum
 
-newValue :: String -> (Integer, Integer) -> (Integer, Integer)
-newValue "" (currMax, curr) = (maximum [currMax, curr], 0)
-newValue x (currMax, curr) = (currMax, curr + (read x))
+addCalories :: String -> [Integer] -> [Integer]
+addCalories "" xs = 0 : xs
+addCalories val [] = [(read val)]
+addCalories val (x:[]) = [x + (read val)]
+addCalories val (x:xs) = x + (read val) : xs
 
-findMaxCalories :: String -> Integer
-findMaxCalories input = do
-  let acc = foldr newValue (0, 0) (lines input)
-  maximum [(fst acc), (snd acc)]
+sumCalories :: String -> [Integer]
+sumCalories input = foldr addCalories [] (lines input)
