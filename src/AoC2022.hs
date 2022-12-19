@@ -1,4 +1,10 @@
-module AoC2022 (someFunc) where
+module AoC2022 (day01) where
 
-someFunc :: IO ()
-someFunc = putStrLn "Day 1 of AoC 2022"
+import System.IO
+import Control.Exception
+
+day01 :: IO ()
+day01 = bracket (openFile "inputs/day01.input1" ReadMode) hClose
+                (\h -> do contents <- hGetContents h
+                          putStrLn "The first 100 chars:"
+                          putStrLn (take 100 contents))
