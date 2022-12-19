@@ -43,7 +43,7 @@ executable aoc2022-hs
     -- other-extensions:
     build-depends:
         base ^>=4.16.4.0,
-        aoc2022-hs
+        aoc2022
 
     hs-source-dirs:   app
     default-language: Haskell2010
