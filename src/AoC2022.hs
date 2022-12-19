@@ -10,5 +10,6 @@ day01 = bracket (openFile "inputs/day01.input1" ReadMode) hClose
 
 sumCalories :: String -> IO ()
 sumCalories input = do
-  putStrLn "The first 100 chars:"
-  putStrLn (take 100 input)
+  let lns = lines input
+  putStrLn "The first 10 lines:"
+  mapM_ putStrLn (take 10 lns)
