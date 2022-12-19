@@ -1,7 +1,8 @@
-module AoC2022 (solve, day01_1) where
+module AoC2022 (solve, day01_1, day01_2) where
 
 import System.IO
 import Control.Exception
+import Data.List
 
 solve :: (String -> Integer) -> String -> IO () -- function per day, input file name -> result
 solve day fileName = bracket (openFile fileName ReadMode) hClose
@@ -19,6 +20,9 @@ day01_1 input = maximum (sumCalories input)
 
 -- For part 2 I need to go back to the original idea: simply sum the calories carried by each elf in a list.
 -- Them simply sort, revert, take 3, sum
+
+day01_2 :: String -> Integer
+day01_2 input = foldr (+) 0 (take 3 (reverse (sort (sumCalories input))))
 
 addCalories :: String -> [Integer] -> [Integer]
 addCalories "" xs = 0 : xs
