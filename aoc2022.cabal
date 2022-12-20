@@ -29,9 +29,18 @@ library
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
-    build-depends:    base ^>=4.16.4.0
+    build-depends:    base>=4
     hs-source-dirs:   src
     default-language: Haskell2010
+
+test-suite test-aoc2022
+    type:               exitcode-stdio-1.0
+    main-is:            Tests.hs
+    build-depends:
+        base>=4,
+        aoc2022
+    hs-source-dirs:     tests
+    default-language:   Haskell2010
 
 executable aoc2022
     main-is:          Main.hs
@@ -42,7 +51,7 @@ executable aoc2022
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
     build-depends:
-        base ^>=4.16.4.0,
+        base>=4,
         aoc2022
 
     hs-source-dirs:   app
