@@ -1,4 +1,4 @@
-module AoC2022 (solve, day01_1, day01_2, day02_1) where
+module AoC2022 (solve, day01_1, day01_2, day02_1, day02_2) where
 
 import System.IO
 import Control.Exception

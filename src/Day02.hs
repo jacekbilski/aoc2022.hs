@@ -1,4 +1,4 @@
-module Day02 (day02_1) where
+module Day02 (day02_1, day02_2) where
 
 day02_1 :: String -> Integer
 day02_1 input = foldl1 (+) (map score (lines input))
@@ -16,3 +16,9 @@ score round = case round of
   "C Y" -> 0 + 2
   "C Z" -> 3 + 3
   _ -> error "invalid round"
+
+day02_2 :: String -> Integer
+day02_2 input = foldl1 (+) (map scoreForOutcome (lines input))
+
+scoreForOutcome :: String -> Integer
+scoreForOutcome round = 0
