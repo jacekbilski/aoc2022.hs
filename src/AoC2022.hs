@@ -4,11 +4,12 @@ import System.IO
 import Control.Exception
 import Data.List
 
-solve :: (String -> Integer) -> String -> IO () -- function per day, input file name -> result
-solve day fileName = bracket (openFile fileName ReadMode) hClose
-                (\h -> do contents <- hGetContents h
-                          let result = day contents
-                          putStrLn (show result))
+solve :: FilePath -> (String -> Integer) -> IO Integer -- function per day, input file name -> result
+solve fileName day = do input <- (readInput fileName)
+                        return (day input)
+
+readInput :: FilePath -> IO String
+readInput fileName = bracket (openFile fileName ReadMode) hClose hGetContents'
 
 -- Basic idea: single go through the input
 -- in accumulator I keep: current max calories of some elf I processed already and sum of calories for current elf
