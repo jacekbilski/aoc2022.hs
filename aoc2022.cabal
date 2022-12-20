@@ -38,9 +38,11 @@ test-suite test-aoc2022
     main-is:            Tests.hs
     build-depends:
         base>=4,
+        HUnit,
         aoc2022
     hs-source-dirs:     tests
     default-language:   Haskell2010
+    ghc-options: -Wall
 
 executable aoc2022
     main-is:          Main.hs
