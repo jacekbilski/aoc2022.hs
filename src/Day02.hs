@@ -1,7 +1,7 @@
 module Day02 (day02_1, day02_2) where
 
 day02_1 :: String -> Integer
-day02_1 input = foldl1 (+) (map score (lines input))
+day02_1 input = sum (map score (lines input))
 
 score :: String -> Integer
 score round = case round of
@@ -18,7 +18,7 @@ score round = case round of
   _ -> error "invalid round"
 
 day02_2 :: String -> Integer
-day02_2 input = foldl1 (+) (map scoreForOutcome (lines input))
+day02_2 input = sum (map scoreForOutcome (lines input))
 
 scoreForOutcome :: String -> Integer
 scoreForOutcome round = case round of
