@@ -4,44 +4,22 @@ import AoC2022
 import qualified System.Exit as Exit
 import Test.HUnit
 
-test_day01_1 :: Test
-test_day01_1 = TestCase (do
-  result <- solve "inputs/day01.input" day01_1
-  assertEqual "It's 69206" 69206 result)
+dayTestCase :: ([String] -> Int) -> FilePath -> Int -> Test
+dayTestCase day input expectedResult = TestCase (do
+  result <- solve input day
+  assertEqual ("It's " ++ (show expectedResult)) expectedResult result)
 
-test_day01_2 :: Test
-test_day01_2 = TestCase (do
-  result <- solve "inputs/day01.input" day01_2
-  assertEqual "It's 197400" 197400 result)
-
-test_day02_1 :: Test
-test_day02_1 = TestCase (do
-  result <- solve "inputs/day02.input" day02_1
-  assertEqual "It's 12458" 12458 result)
-
-test_day02_2 :: Test
-test_day02_2 = TestCase (do
-  result <- solve "inputs/day02.input" day02_2
-  assertEqual "It's 12683" 12683 result)
-
-test_day03_1 :: Test
-test_day03_1 = TestCase (do
-  result <- solve "inputs/day03.input" day03_1
-  assertEqual "It's 8252" 8252 result)
-
-test_day03_2 :: Test
-test_day03_2 = TestCase (do
-  result <- solve "inputs/day03.input" day03_2
-  assertEqual "It's 2828" 2828 result)
+labeledDayTestCase :: String -> ([String] -> Int) -> FilePath -> Int -> Test
+labeledDayTestCase name day input expectedResult = TestLabel name (dayTestCase day input expectedResult)
 
 tests :: Test
 tests = TestList [
-    TestLabel "day 01 part 1" test_day01_1
-   ,TestLabel "day 01 part 2" test_day01_2
-   ,TestLabel "day 02 part 1" test_day02_1
-   ,TestLabel "day 02 part 2" test_day02_2
-   ,TestLabel "day 03 part 1" test_day03_1
-   ,TestLabel "day 03 part 2" test_day03_2
+    labeledDayTestCase "day 01 part 1" day01_1 "inputs/day01.input" 69206
+   ,labeledDayTestCase "day 01 part 2" day01_2 "inputs/day01.input" 197400
+   ,labeledDayTestCase "day 02 part 1" day02_1 "inputs/day02.input" 12458
+   ,labeledDayTestCase "day 02 part 2" day02_2 "inputs/day02.input" 12683
+   ,labeledDayTestCase "day 03 part 1" day03_1 "inputs/day03.input" 8252
+   ,labeledDayTestCase "day 03 part 2" day03_2 "inputs/day03.input" 2828
   ]
 
 main :: IO Counts
