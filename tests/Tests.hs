@@ -21,7 +21,7 @@ tests = TestList [
    ,labeledDayTestCase "day 03 part 1" day03_1 "inputs/day03.input" 8252
    ,labeledDayTestCase "day 03 part 2" day03_2 "inputs/day03.input" 2828
    ,labeledDayTestCase "day 04 part 1" day04_1 "inputs/day04.input" 542
-   ,labeledDayTestCase "day 04 part 2" day04_2 "inputs/day04.input" (-1)
+   ,labeledDayTestCase "day 04 part 2" day04_2 "inputs/day04.input" 900
   ]
 
 main :: IO Counts
