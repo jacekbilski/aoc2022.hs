@@ -4,12 +4,12 @@ import AoC2022
 import qualified System.Exit as Exit
 import Test.HUnit
 
-dayTestCase :: ([String] -> Int) -> FilePath -> Int -> Test
+dayTestCase :: (Show a, Eq a) => ([String] -> a) -> FilePath -> a -> Test
 dayTestCase day input expectedResult = TestCase (do
   result <- solve input day
   assertEqual ("It's " ++ (show expectedResult)) expectedResult result)
 
-labeledDayTestCase :: String -> ([String] -> Int) -> FilePath -> Int -> Test
+labeledDayTestCase :: (Show a, Eq a) => String -> ([String] -> a) -> FilePath -> a -> Test
 labeledDayTestCase name day input expectedResult = TestLabel name (dayTestCase day input expectedResult)
 
 tests :: Test
