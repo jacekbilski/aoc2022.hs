@@ -27,7 +27,7 @@ test_day02_2 = TestCase (do
 test_day03_1 :: Test
 test_day03_1 = TestCase (do
   result <- solve "inputs/day03.input" day03_1
-  assertEqual "It's ?" (-1) result)
+  assertEqual "It's 8252" 8252 result)
 
 test_day03_2 :: Test
 test_day03_2 = TestCase (do

@@ -1,6 +1,8 @@
 module Day03 (day03_1, day03_2) where
 
 import Flow
+import Data.List
+import Data.Char
 
 -- split into compartments
 -- find common element
@@ -11,7 +13,6 @@ type Compartment = String
 type Rucksack = (Compartment, Compartment)
 
 day03_1 :: String -> Int
---day03_1 input = lines input |> intoRucksack |> findCommonType |> calculatePriority |> sum
 day03_1 input = do
   let processOneRucksack = intoRucksack .> findCommonType .> calculatePriority
   sum (map processOneRucksack (lines input))
@@ -20,10 +21,13 @@ intoRucksack :: String -> Rucksack
 intoRucksack items = splitAt (div (length items) 2) items
 
 findCommonType :: Rucksack -> Char
-findCommonType rucksack = 'a'
+findCommonType rucksack = findCommonType_ (rucksack |> fst |> sort) (rucksack |> snd |> sort)
 
-calculatePriority :: Char -> Integer
-calculatePriority typ = 1
+findCommonType_ :: [Char] -> [Char] -> Char
+findCommonType_ (l:ls) (r:rs)
+  | l == r = l
+  | l < r = findCommonType_ ls (r:rs)
+  | l > r = findCommonType_ (l:ls) rs
 
 calculatePriority :: Char -> Int
 calculatePriority typ = if typ < 'a' then (ord typ) - 38 else (ord typ) - 96
