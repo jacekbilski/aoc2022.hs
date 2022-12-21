@@ -16,7 +16,7 @@ type Rucksack = (Compartment, Compartment)
 day03_1 :: String -> Int
 day03_1 input = do
   let processOneRucksack = intoRucksack .> findCommonType .> calculatePriority
-  sum (map processOneRucksack (lines input))
+  lines input |> map processOneRucksack |> sum
 
 intoRucksack :: String -> Rucksack
 intoRucksack items = splitAt (div (length items) 2) items
@@ -35,7 +35,7 @@ calculatePriority typ = if typ < 'a' then (ord typ) - 38 else (ord typ) - 96
 day03_2 :: String -> Int
 day03_2 input = do
   let processOneGroup = findGroupType .> calculatePriority
-  sum (map processOneGroup ((lines input) |> chunksOf 3))
+  (lines input) |> chunksOf 3 |> map processOneGroup |> sum
 
 findGroupType :: [String] -> Char
 findGroupType [a,b,c] = intersect a b |> intersect c |> head
