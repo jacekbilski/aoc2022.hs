@@ -2,8 +2,8 @@ module Day02 (day02_1, day02_2) where
 
 import Flow
 
-day02_1 :: String -> Int
-day02_1 input = lines input |> map score |> sum
+day02_1 :: [String] -> Int
+day02_1 input = map score input |> sum
 
 score :: String -> Int
 score round = case round of
@@ -19,8 +19,8 @@ score round = case round of
   "C Z" -> 3 + 3
   _ -> error "invalid round"
 
-day02_2 :: String -> Int
-day02_2 input = lines input |> map scoreForOutcome |> sum
+day02_2 :: [String] -> Int
+day02_2 input = map scoreForOutcome input |> sum
 
 scoreForOutcome :: String -> Int
 scoreForOutcome round = case round of

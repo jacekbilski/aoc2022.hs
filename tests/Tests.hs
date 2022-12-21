@@ -1,8 +1,8 @@
 module Main where
 
-import Test.HUnit
 import AoC2022
 import qualified System.Exit as Exit
+import Test.HUnit
 
 test_day01_1 :: Test
 test_day01_1 = TestCase (do
