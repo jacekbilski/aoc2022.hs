@@ -21,13 +21,7 @@ intoRucksack :: String -> Rucksack
 intoRucksack items = splitAt (div (length items) 2) items
 
 findCommonType :: Rucksack -> Char
-findCommonType rucksack = findCommonType_ (rucksack |> fst |> sort) (rucksack |> snd |> sort)
-
-findCommonType_ :: [Char] -> [Char] -> Char
-findCommonType_ (l:ls) (r:rs)
-  | l == r = l
-  | l < r = findCommonType_ ls (r:rs)
-  | l > r = findCommonType_ (l:ls) rs
+findCommonType rucksack = intersect (rucksack |> fst |> sort) (rucksack |> snd |> sort) |> head
 
 calculatePriority :: Char -> Int
 calculatePriority typ = if typ < 'a' then (ord typ) - 38 else (ord typ) - 96
