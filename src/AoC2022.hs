@@ -7,7 +7,7 @@ import Day01
 import Day02
 import Day03
 
-solve :: FilePath -> (String -> Integer) -> IO Integer -- function per day, input file name -> result
+solve :: FilePath -> (String -> Int) -> IO Int -- function per day, input file name -> result
 solve fileName day = do input <- (readInput fileName)
                         return (day input)
 

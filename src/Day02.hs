@@ -1,9 +1,9 @@
 module Day02 (day02_1, day02_2) where
 
-day02_1 :: String -> Integer
+day02_1 :: String -> Int
 day02_1 input = sum (map score (lines input))
 
-score :: String -> Integer
+score :: String -> Int
 score round = case round of
 -- outcome + shape I selected
   "A X" -> 3 + 1
@@ -17,10 +17,10 @@ score round = case round of
   "C Z" -> 3 + 3
   _ -> error "invalid round"
 
-day02_2 :: String -> Integer
+day02_2 :: String -> Int
 day02_2 input = sum (map scoreForOutcome (lines input))
 
-scoreForOutcome :: String -> Integer
+scoreForOutcome :: String -> Int
 scoreForOutcome round = case round of
 -- outcome + shape I selected
   "A X" -> 0 + 3
