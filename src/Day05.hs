@@ -11,7 +11,7 @@ type Step = (Int, Char, Char) -- quantity, source, target
 type Procedure = [Step] -> Stacks -> Stacks
 
 day05_1 :: [String] -> String
-day05_1 input = rearrange_stacks do_apply_procedure_9000 input
+day05_1 input = rearrange_stacks use_crate_mover_9000 input
 
 rearrange_stacks :: Procedure -> [String] -> String
 rearrange_stacks procedure input = do
@@ -37,29 +37,29 @@ apply_procedure procedure input stacks = do
 parse_procedure :: [String] -> [Step]
 parse_procedure input = input |> map words |> map (\a -> (read (a !! 1), a !! 3 !! 0, a !! 5 !! 0))
 
-do_apply_procedure_9000 :: Procedure
-do_apply_procedure_9000 [] stacks = stacks
-do_apply_procedure_9000 steps stacks = do
+use_crate_mover_9000 :: Procedure
+use_crate_mover_9000 [] stacks = stacks
+use_crate_mover_9000 steps stacks = do
   let step = head steps
   let (quantity, source, target) = step
   if quantity == 0
     then do
-      do_apply_procedure_9000 (tail steps) stacks
+      use_crate_mover_9000 (tail steps) stacks
     else do
       let e = stacks Map.! source |> head
-      Map.adjust ([e] ++) target stacks |> Map.adjust (tail) source |> do_apply_procedure_9000 ((quantity - 1, source, target) : (tail steps))
+      Map.adjust ([e] ++) target stacks |> Map.adjust (tail) source |> use_crate_mover_9000 ((quantity - 1, source, target) : (tail steps))
 
 day05_2 :: [String] -> String
-day05_2 input = rearrange_stacks do_apply_procedure_9001 input
+day05_2 input = rearrange_stacks use_crate_mover_9001 input
 
-do_apply_procedure_9001 :: Procedure
-do_apply_procedure_9001 [] stacks = stacks
-do_apply_procedure_9001 steps stacks = do
+use_crate_mover_9001 :: Procedure
+use_crate_mover_9001 [] stacks = stacks
+use_crate_mover_9001 steps stacks = do
   let step = head steps
   let (quantity, source, target) = step
   if quantity == 0
     then do
-      do_apply_procedure_9001 (tail steps) stacks
+      use_crate_mover_9001 (tail steps) stacks
     else do
       let es = stacks Map.! source |> take quantity
-      Map.adjust (es ++) target stacks |> Map.adjust (drop quantity) source |> do_apply_procedure_9001 (tail steps)
+      Map.adjust (es ++) target stacks |> Map.adjust (drop quantity) source |> use_crate_mover_9001 (tail steps)
