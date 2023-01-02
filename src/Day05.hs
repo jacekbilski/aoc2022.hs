@@ -8,15 +8,15 @@ import Flow
 
 day05_1 :: [String] -> String
 day05_1 input = do
-  let stacks = load_stacks input
+  let separator_line_index = zip [0..] input |> filter (\i -> snd i == "") |> head |> fst
+  let stacks = take separator_line_index input |> load_stacks
   stacks |> Map.map head |> Map.elems
 
-load_stacks :: [String] -> Map Int [Char]
+load_stacks :: [String] -> Map Char [Char]
 load_stacks input = do
-  let separator_idx = zip [0..] input |> filter (\i -> snd i == "") |> head |> fst
-  let stack_input_indexes = zip [0..] (input !! (separator_idx - 1)) |> filter (\c -> snd c /= ' ') |> map (\t -> fst t)
-  let stacks_input = take (separator_idx - 1) input
-  map (\s -> (s, take_col stacks_input s |> filter (\c -> c /= ' '))) stack_input_indexes |> Map.fromList
+  let stack_input_indexes = zip [0..] (last input) |> filter (\c -> snd c /= ' ') |> map (\t -> fst t)
+  let stacks_input = init input
+  map (\s -> ((last input) !! s, take_col stacks_input s |> filter (\c -> c /= ' '))) stack_input_indexes |> Map.fromList
 
 take_col :: [[Char]] -> Int -> [Char]
 take_col tab col = map (\r -> r !! col) tab
