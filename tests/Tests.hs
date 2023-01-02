@@ -32,7 +32,7 @@ tests = TestList [
    ,labeledDayTestCase "day 04 part 2" day04_2 "inputs/day04.input" 900
    ,labeledDayTestCase "day 05 part 1" day05_1 "inputs/day05.input" "BWNCQRMDB"
    ,labeledDayTestCase "day 05 part 2" day05_2 "inputs/day05.input" "NHWZCBNBF"
-   ,labeledDayTestCase "day 06 part 1" day06_1 "inputs/day06.input" 0
+   ,labeledDayTestCase "day 06 part 1" day06_1 "inputs/day06.input" 1109
    ,labeledDayTestCase "day 06 part 2" day06_2 "inputs/day06.input" 0
    ,labeledDayExampleTestCase "day 06 part 1 example 1" day06_1 ["bvwbjplbgvbhsrlpgdmjqwftvncz"] 5
    ,labeledDayExampleTestCase "day 06 part 1 example 2" day06_1 ["nppdvjthqldpwncqszvftbrmjlhg"] 6
