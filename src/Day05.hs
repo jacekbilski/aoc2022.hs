@@ -53,4 +53,13 @@ day05_2 :: [String] -> String
 day05_2 input = rearrange_stacks do_apply_procedure_9001 input
 
 do_apply_procedure_9001 :: Procedure
-do_apply_procedure_9001 steps stacks = stacks
+do_apply_procedure_9001 [] stacks = stacks
+do_apply_procedure_9001 steps stacks = do
+  let step = head steps
+  let (quantity, source, target) = step
+  if quantity == 0
+    then do
+      do_apply_procedure_9001 (tail steps) stacks
+    else do
+      let es = stacks Map.! source |> take quantity
+      Map.adjust (es ++) target stacks |> Map.adjust (drop quantity) source |> do_apply_procedure_9001 (tail steps)
