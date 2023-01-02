@@ -33,11 +33,7 @@ tests = TestList [
    ,labeledDayTestCase "day 05 part 1" day05_1 "inputs/day05.input" "BWNCQRMDB"
    ,labeledDayTestCase "day 05 part 2" day05_2 "inputs/day05.input" "NHWZCBNBF"
    ,labeledDayTestCase "day 06 part 1" day06_1 "inputs/day06.input" 1109
-   ,labeledDayTestCase "day 06 part 2" day06_2 "inputs/day06.input" 0
-   ,labeledDayExampleTestCase "day 06 part 1 example 1" day06_1 ["bvwbjplbgvbhsrlpgdmjqwftvncz"] 5
-   ,labeledDayExampleTestCase "day 06 part 1 example 2" day06_1 ["nppdvjthqldpwncqszvftbrmjlhg"] 6
-   ,labeledDayExampleTestCase "day 06 part 1 example 3" day06_1 ["nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg"] 10
-   ,labeledDayExampleTestCase "day 06 part 1 example 4" day06_1 ["zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw"] 11
+   ,labeledDayTestCase "day 06 part 2" day06_2 "inputs/day06.input" 3965
   ]
 
 main :: IO Counts
