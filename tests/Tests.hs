@@ -12,6 +12,14 @@ dayTestCase day input expectedResult = TestCase (do
 labeledDayTestCase :: (Show a, Eq a) => String -> ([String] -> a) -> FilePath -> a -> Test
 labeledDayTestCase name day input expectedResult = TestLabel name (dayTestCase day input expectedResult)
 
+dayExampleTestCase :: (Show a, Eq a) => ([String] -> a) -> [String] -> a -> Test
+dayExampleTestCase day input expectedResult = TestCase (do
+  let result = day input
+  assertEqual ("It's " ++ (show expectedResult)) expectedResult result)
+
+labeledDayExampleTestCase :: (Show a, Eq a) => String -> ([String] -> a) -> [String] -> a -> Test
+labeledDayExampleTestCase name day input expectedResult = TestLabel name (dayExampleTestCase day input expectedResult)
+
 tests :: Test
 tests = TestList [
     labeledDayTestCase "day 01 part 1" day01_1 "inputs/day01.input" 69206
@@ -24,6 +32,12 @@ tests = TestList [
    ,labeledDayTestCase "day 04 part 2" day04_2 "inputs/day04.input" 900
    ,labeledDayTestCase "day 05 part 1" day05_1 "inputs/day05.input" "BWNCQRMDB"
    ,labeledDayTestCase "day 05 part 2" day05_2 "inputs/day05.input" "NHWZCBNBF"
+   ,labeledDayTestCase "day 06 part 1" day06_1 "inputs/day06.input" 0
+   ,labeledDayTestCase "day 06 part 2" day06_2 "inputs/day06.input" 0
+   ,labeledDayExampleTestCase "day 06 part 1 example 1" day06_1 ["bvwbjplbgvbhsrlpgdmjqwftvncz"] 5
+   ,labeledDayExampleTestCase "day 06 part 1 example 2" day06_1 ["nppdvjthqldpwncqszvftbrmjlhg"] 6
+   ,labeledDayExampleTestCase "day 06 part 1 example 3" day06_1 ["nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg"] 10
+   ,labeledDayExampleTestCase "day 06 part 1 example 4" day06_1 ["zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw"] 11
   ]
 
 main :: IO Counts
