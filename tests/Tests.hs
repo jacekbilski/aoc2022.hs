@@ -1,27 +1,27 @@
 module Main where
 
 import AoC2022
-import qualified System.Exit as Exit
-import Test.HUnit
+import Test.Tasty
+import Test.Tasty.HUnit
 
-dayTestCase :: (Show a, Eq a) => ([String] -> a) -> FilePath -> a -> Test
-dayTestCase day input expectedResult = TestCase (do
+dayTestCase :: (Show a, Eq a) => ([String] -> a) -> FilePath -> a -> Assertion
+dayTestCase day input expectedResult = do
   result <- solve input day
-  assertEqual ("It's " ++ (show expectedResult)) expectedResult result)
+  assertEqual ("It's " ++ (show expectedResult)) expectedResult result
 
-labeledDayTestCase :: (Show a, Eq a) => String -> ([String] -> a) -> FilePath -> a -> Test
-labeledDayTestCase name day input expectedResult = TestLabel name (dayTestCase day input expectedResult)
+labeledDayTestCase :: (Show a, Eq a) => String -> ([String] -> a) -> FilePath -> a -> TestTree
+labeledDayTestCase name day input expectedResult = testCase name $ dayTestCase day input expectedResult
 
-dayExampleTestCase :: (Show a, Eq a) => ([String] -> a) -> [String] -> a -> Test
-dayExampleTestCase day input expectedResult = TestCase (do
+dayExampleTestCase :: (Show a, Eq a) => ([String] -> a) -> [String] -> a -> Assertion
+dayExampleTestCase day input expectedResult = do
   let result = day input
-  assertEqual ("It's " ++ (show expectedResult)) expectedResult result)
+  assertEqual ("It's " ++ (show expectedResult)) expectedResult result
 
-labeledDayExampleTestCase :: (Show a, Eq a) => String -> ([String] -> a) -> [String] -> a -> Test
-labeledDayExampleTestCase name day input expectedResult = TestLabel name (dayExampleTestCase day input expectedResult)
+labeledDayExampleTestCase :: (Show a, Eq a) => String -> ([String] -> a) -> [String] -> a -> TestTree
+labeledDayExampleTestCase name day input expectedResult = testCase name $ dayExampleTestCase day input expectedResult
 
-tests :: Test
-tests = TestList [
+tests :: TestTree
+tests = testGroup "Advent of Code 2022" [
     labeledDayTestCase "day 01 part 1" day01_1 "inputs/day01.input" 69206
    ,labeledDayTestCase "day 01 part 2" day01_2 "inputs/day01.input" 197400
    ,labeledDayTestCase "day 02 part 1" day02_1 "inputs/day02.input" 12458
@@ -36,7 +36,5 @@ tests = TestList [
    ,labeledDayTestCase "day 06 part 2" day06_2 "inputs/day06.input" 3965
   ]
 
-main :: IO Counts
-main = do
-    count <- runTestTT tests
-    if failures count > 0 || errors count > 0 then Exit.exitFailure else return count
+main :: IO ()
+main = defaultMain tests
