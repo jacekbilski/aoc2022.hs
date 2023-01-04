@@ -1,2 +1,5 @@
 .idea
 dist-newstyle/
+.stack-work
+*.iml
+out
