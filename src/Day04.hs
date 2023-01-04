@@ -26,6 +26,6 @@ day04_2 input = map parseInput input |> filter rangesPartiallyOverlap |> length
 
 rangesPartiallyOverlap :: (Range, Range) -> Bool
 rangesPartiallyOverlap (x, y) = do
-  let diff1 = (snd y) - (fst x)
-  let diff2 = (fst y) - (snd x)
+  let diff1 = snd y - fst x
+  let diff2 = fst y - snd x
   diff1 == 0 || diff2 == 0 || signum diff1 /= signum diff2

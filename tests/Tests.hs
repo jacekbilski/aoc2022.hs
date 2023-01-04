@@ -7,7 +7,7 @@ import Test.Tasty.HUnit
 dayTestCase :: (Show a, Eq a) => ([String] -> a) -> FilePath -> a -> Assertion
 dayTestCase day input expectedResult = do
   result <- solve input day
-  assertEqual ("It's " ++ (show expectedResult)) expectedResult result
+  assertEqual ("It's " ++ show expectedResult) expectedResult result
 
 labeledDayTestCase :: (Show a, Eq a) => String -> ([String] -> a) -> FilePath -> a -> TestTree
 labeledDayTestCase name day input expectedResult = testCase name $ dayTestCase day input expectedResult
@@ -15,7 +15,7 @@ labeledDayTestCase name day input expectedResult = testCase name $ dayTestCase d
 dayExampleTestCase :: (Show a, Eq a) => ([String] -> a) -> [String] -> a -> Assertion
 dayExampleTestCase day input expectedResult = do
   let result = day input
-  assertEqual ("It's " ++ (show expectedResult)) expectedResult result
+  assertEqual ("It's " ++ show expectedResult) expectedResult result
 
 labeledDayExampleTestCase :: (Show a, Eq a) => String -> ([String] -> a) -> [String] -> a -> TestTree
 labeledDayExampleTestCase name day input expectedResult = testCase name $ dayExampleTestCase day input expectedResult

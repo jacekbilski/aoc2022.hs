@@ -1,6 +1,6 @@
 module Day01 (day01_1, day01_2) where
 
-import Data.List
+import Data.List (sort)
 import Flow
 
 -- Basic idea: single go through the input
@@ -19,9 +19,9 @@ day01_2 input = sumCalories input |> sort |> reverse |> take 3 |> sum
 
 addCalories :: String -> [Int] -> [Int]
 addCalories "" xs = 0 : xs
-addCalories val [] = [(read val)]
-addCalories val (x:[]) = [x + (read val)]
-addCalories val (x:xs) = x + (read val) : xs
+addCalories val [] = [read val]
+addCalories val [x] = [x + read val]
+addCalories val (x:xs) = x + read val : xs
 
 sumCalories :: [String] -> [Int]
-sumCalories input = foldr addCalories [] input
+sumCalories = foldr addCalories []

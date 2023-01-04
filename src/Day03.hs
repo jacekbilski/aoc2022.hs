@@ -1,7 +1,7 @@
 module Day03 (day03_1, day03_2) where
 
 import Data.Char
-import Data.List
+import Data.List (intersect, sort)
 import Data.List.Split
 import Flow
 
@@ -25,7 +25,7 @@ findCommonType :: Rucksack -> Char
 findCommonType rucksack = intersect (rucksack |> fst |> sort) (rucksack |> snd |> sort) |> head
 
 calculatePriority :: Char -> Int
-calculatePriority typ = if typ < 'a' then (ord typ) - 38 else (ord typ) - 96
+calculatePriority typ = if typ < 'a' then ord typ - 38 else ord typ - 96
 
 -- group by 3
 -- intersect

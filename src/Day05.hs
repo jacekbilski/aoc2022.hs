@@ -11,7 +11,7 @@ type Step = (Int, Char, Char) -- quantity, source, target
 type Procedure = [Step] -> Stacks -> Stacks
 
 day05_1 :: [String] -> String
-day05_1 input = rearrangeStacks useCrateMover9000 input
+day05_1 = rearrangeStacks useCrateMover9000
 
 rearrangeStacks :: Procedure -> [String] -> String
 rearrangeStacks procedure input = do
@@ -22,12 +22,12 @@ rearrangeStacks procedure input = do
 
 loadStacks :: [String] -> Stacks
 loadStacks input = do
-  let stacksInputIndexes = zip [0..] (last input) |> filter (\c -> snd c /= ' ') |> map (\t -> fst t)
+  let stacksInputIndexes = zip [0..] (last input) |> filter (\c -> snd c /= ' ') |> map fst
   let stacksInput = init input
-  map (\s -> ((last input) !! s, takeCol stacksInput s |> filter (\c -> c /= ' '))) stacksInputIndexes |> Map.fromList
+  map (\s -> (last input !! s, takeCol stacksInput s |> filter (/= ' '))) stacksInputIndexes |> Map.fromList
 
 takeCol :: [[Char]] -> Int -> [Char]
-takeCol tab col = map (\r -> r !! col) tab
+takeCol tab col = map (!! col) tab
 
 applyProcedure :: Procedure -> [String] -> Stacks -> Stacks
 applyProcedure procedure input stacks = do
@@ -35,7 +35,7 @@ applyProcedure procedure input stacks = do
   procedure steps stacks
 
 parseProcedure :: [String] -> [Step]
-parseProcedure input = input |> map words |> map (\a -> (read (a !! 1), a !! 3 !! 0, a !! 5 !! 0))
+parseProcedure input = input |> map words |> map (\a -> (read (a !! 1), head (a !! 3), head (a !! 5)))
 
 useCrateMover9000 :: Procedure
 useCrateMover9000 [] stacks = stacks
@@ -47,10 +47,10 @@ useCrateMover9000 steps stacks = do
       useCrateMover9000 (tail steps) stacks
     else do
       let e = stacks Map.! source |> head
-      Map.adjust ([e] ++) target stacks |> Map.adjust (tail) source |> useCrateMover9000 ((quantity - 1, source, target) : (tail steps))
+      Map.adjust ([e] ++) target stacks |> Map.adjust tail source |> useCrateMover9000 ((quantity - 1, source, target) : tail steps)
 
 day05_2 :: [String] -> String
-day05_2 input = rearrangeStacks useCrateMover9001 input
+day05_2 = rearrangeStacks useCrateMover9001
 
 useCrateMover9001 :: Procedure
 useCrateMover9001 [] stacks = stacks

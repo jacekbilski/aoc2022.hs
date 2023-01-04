@@ -1,5 +1,6 @@
 module Day02 (day02_1, day02_2) where
 
+import Prelude hiding (round)
 import Flow
 
 day02_1 :: [String] -> Int
