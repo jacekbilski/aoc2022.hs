@@ -36,11 +36,13 @@ library
 
 test-suite test-aoc2022
     type:               exitcode-stdio-1.0
-    main-is:            Tests.hs
+    main-is:            Driver.hs
+    other-modules:      Tests
     build-depends:
         base>=4
        ,tasty >= 1.4
        ,tasty-hunit
+       ,tasty-discover
        ,aoc2022
     hs-source-dirs:     tests
     default-language:   Haskell2010

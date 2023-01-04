@@ -1,4 +1,4 @@
-module Main where
+module Tests where
 
 import AoC2022
 import Test.Tasty
@@ -20,8 +20,8 @@ dayExampleTestCase day input expectedResult = do
 labeledDayExampleTestCase :: (Show a, Eq a) => String -> ([String] -> a) -> [String] -> a -> TestTree
 labeledDayExampleTestCase name day input expectedResult = testCase name $ dayExampleTestCase day input expectedResult
 
-tests :: TestTree
-tests = testGroup "Advent of Code 2022" [
+test_aoc :: TestTree
+test_aoc = testGroup "Advent of Code 2022" [
     labeledDayTestCase "day 01 part 1" day01_1 "inputs/day01.input" 69206
    ,labeledDayTestCase "day 01 part 2" day01_2 "inputs/day01.input" 197400
    ,labeledDayTestCase "day 02 part 1" day02_1 "inputs/day02.input" 12458
@@ -37,6 +37,3 @@ tests = testGroup "Advent of Code 2022" [
    ,labeledDayTestCase "day 07 part 1" day07_1 "inputs/day07.input" 0
    ,labeledDayTestCase "day 07 part 2" day07_2 "inputs/day07.input" 0
   ]
-
-main :: IO ()
-main = defaultMain tests
