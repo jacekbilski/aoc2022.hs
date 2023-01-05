@@ -6,9 +6,9 @@ import Flow
 
 --data File a = RegularFile a | Directory String [File a]
 --type Directory = Map String [RegularFile]  -- name, files
-data RegularFile = Int
-data File = RegularFile Int | Directory
-data Directory = Map String File
+--data RegularFile = RegularFile {size::Int}
+type Directory = Map String File
+data File = RegularFile {s::Int} | Directory (Map String File)
 
 day07_1 :: [String] -> Int
 day07_1 input = do
@@ -46,8 +46,9 @@ findDirs dir = [dir]
 --findDirs (RegularFile _ _) = []
 
 size :: File -> Int
-size (Directory dir) = Map.elems dir |> sum
-size (RegularFile rf) = rf
+size (Directory dir) = Map.elems dir |> map s |> sum
+size (RegularFile s) = s
+--size (Map name files) = Map.elems dir |> sum
 
 day07_2 :: [String] -> Int
 day07_2 _ = -1
