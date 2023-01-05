@@ -4,8 +4,8 @@ import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
 import Flow
 
-data File = RegularFile String Int | Directory String [File]
-type Directory = Map String [File]  -- name, files
+--data File = RegularFile String Int | Directory String [File]
+type Directory = (String, [RegularFile])  -- name, files
 type RegularFile = (String, Int)  -- name, size
 
 day07_1 :: [String] -> Int
@@ -14,15 +14,17 @@ day07_1 input = do
   findDirs root |> filter (\d -> size d <= 100000) |> map size |> sum
 
 buildDirectoryTree :: [String] -> Directory
-buildDirectoryTree input = Directory "/" []
+buildDirectoryTree input = ("/", [])
 
-findDirs :: File -> [Directory]
-findDirs (Directory _ [files]) = []
-findDirs (RegularFile _ _) = []
+findDirs :: Directory -> [Directory]
+findDirs dir = []
+--findDirs (Directory _ [files]) = []
+--findDirs (RegularFile _ _) = []
 
-size :: File -> Int
-size (Directory name [files]) = 0
-size (RegularFile _ s) = s
+size :: Directory -> Int
+size (_, files) = map snd files |> sum
+--size (Directory name [files]) = 0
+--size (RegularFile _ s) = s
 
 day07_2 :: [String] -> Int
 day07_2 input = -1
