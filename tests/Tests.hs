@@ -38,4 +38,6 @@ test_aoc = testGroup "Advent of Code 2022" [
    ,labeledDayTestCase "day 07 part 2" day07_2 "inputs/day07.input" (-1)
    ,labeledDayExampleTestCase "day 07 example 1" day07_1 ["$ cd /"] 0
    ,labeledDayExampleTestCase "day 07 example 2" day07_1 ["$ cd /", "$ ls", "123 x"] 123
+   ,labeledDayExampleTestCase "day 07 example 3" day07_1 ["$ cd /", "$ ls", "123 x", "123 y"] 246
+   ,labeledDayExampleTestCase "day 07 example 4" day07_1 ["$ cd /", "$ ls", "dir a", "$ cd a", "123 x"] 246
   ]

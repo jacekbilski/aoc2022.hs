@@ -4,10 +4,11 @@ import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
 import Flow
 
---data File = RegularFile String Int | Directory String [File]
+--data File a = RegularFile a | Directory String [File a]
 --type Directory = Map String [RegularFile]  -- name, files
-type Directory = Map String Int -- filename -> size
---type RegularFile = (String, Int)  -- name, size
+data RegularFile = Int
+data File = RegularFile Int | Directory
+data Directory = Map String File
 
 day07_1 :: [String] -> Int
 day07_1 input = do
@@ -32,7 +33,8 @@ doBuildDirectoryTree root (x:xs)
       else do -- should be pattern: "size fileName"
         let fs = read (head y) :: Int
         let filename = y !! 1
-        doBuildDirectoryTree (Map.insert filename fs root) xs
+        let file = RegularFile fs
+        doBuildDirectoryTree (Map.insert filename file root) xs
 
 --  | Just dirName <- stripPrefix "$ cd " x = doBuildDirectoryTree root ((head path) !! dirName) xs
 --  | otherwise = error "Unsupported yet"
@@ -43,11 +45,9 @@ findDirs dir = [dir]
 --findDirs (Directory _ [files]) = []
 --findDirs (RegularFile _ _) = []
 
-size :: Directory -> Int
-size dir = Map.elems dir |> sum
---size dir = Map.elems dir |> concat |> map snd |> sum
---size (Directory name [files]) = 0
---size (RegularFile _ s) = s
+size :: File -> Int
+size (Directory dir) = Map.elems dir |> sum
+size (RegularFile rf) = rf
 
 day07_2 :: [String] -> Int
 day07_2 _ = -1
