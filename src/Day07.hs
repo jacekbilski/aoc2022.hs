@@ -20,20 +20,27 @@ buildDirectoryTree :: [String] -> Directory
 buildDirectoryTree = doBuildDirectoryTree ("/", Nothing) []
 
 doBuildDirectoryTree :: Directory -> [Directory] -> [String] -> Directory -- root -> current path -> input -> final directory tree
-doBuildDirectoryTree _ _ _ = ("/", Just ("x", 123))
---doBuildDirectoryTree root _ [] = root
---doBuildDirectoryTree root path (x:xs)
---  | x == "$ cd /" = do  -- I do hope this is just the first command and happens just once
---    let newRoot = Map.fromList [("/", [])]
---    doBuildDirectoryTree newRoot [newRoot] xs
---  | x == "$ ls" = doBuildDirectoryTree root path xs -- nothing to do
+doBuildDirectoryTree root _ [] = root
+doBuildDirectoryTree root path (x:xs)
+  | x == "$ cd /" = do  -- I do hope this is just the first command and happens just once
+    let newRoot = ("/", Nothing)
+    doBuildDirectoryTree newRoot [newRoot] xs
+  | x == "$ ls" = doBuildDirectoryTree root path xs -- nothing to do
 --  | x == "$ cd .." = doBuildDirectoryTree root (tail path) xs
---  | otherwise = do
---    let y = words x
---    head y | y == "dir" = do  -- not yet supported
---      let currDir = head path
---
+  | otherwise = do
+    let y = words x
+    if head y == "dir"
+    then error "Unsupported yet"  -- not yet supported
+    else do -- should be pattern: "size fileName"
+      let fs = read (head y) :: Int
+      let filename = y !! 1
+      let file = (filename, fs)
+      let newRoot = ("/", Just file)
+      doBuildDirectoryTree newRoot [newRoot] xs
+
 --  | Just dirName <- stripPrefix "$ cd " x = doBuildDirectoryTree root ((head path) !! dirName) xs
+--  | otherwise = error "Unsupported yet"
+--doBuildDirectoryTree _ _ _ = ("/", Just ("x", 123))
 
 findDirs :: Directory -> [Directory]
 findDirs dir = [dir]
