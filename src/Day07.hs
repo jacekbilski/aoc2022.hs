@@ -11,7 +11,7 @@ requiredFreeSpace = 30000000 :: Int
 data File = RegularFile Int | Directory (Map String File) deriving (Show)
 
 day07_1 :: [String] -> Int
-day07_1 input = findDirs (buildDirectoryTree input) |> filter (\d -> size d <= 100000) |> map size |> sum
+day07_1 input = findDirs (buildDirectoryTree input) |> map size |> filter (<= 100000) |> sum
 
 buildDirectoryTree :: [String] -> File
 buildDirectoryTree = doBuildDirectoryTree (Directory Map.empty) []
