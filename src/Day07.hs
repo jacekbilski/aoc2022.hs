@@ -47,10 +47,11 @@ addFile filename file (currDir:restPath) (Directory root) = do
       addFile currDir withNew restPath (Directory root)
 
 getFile :: [String] -> File -> File -- path -> dir -> found file
--- wrong answers only
---getFile _ file = file
-getFile [] file = file
-getFile (x:xs) (Directory dir) = getFile xs (dir Map.! x)
+getFile path = doGetFile (reverse path)
+
+doGetFile :: [String] -> File -> File -- path -> dir -> found file
+doGetFile [] file = file
+doGetFile (x:xs) (Directory dir) = getFile xs (dir Map.! x)
 
 findDirs :: File -> [File]
 findDirs dir = [dir]
