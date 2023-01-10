@@ -22,9 +22,9 @@ doBuildDirectoryTree (Directory root) path (x:xs)
   | x == "$ ls" = doBuildDirectoryTree (Directory root) path xs -- nothing to do
   | "$ cd " `isPrefixOf` x = do
     let dirName = drop 5 x
-    case dirName of
-      ".." -> doBuildDirectoryTree (Directory root) (tail path) xs
-      otherwise -> doBuildDirectoryTree (Directory root) (dirName : path) xs
+    if dirName == ".."
+      then doBuildDirectoryTree (Directory root) (tail path) xs
+      else doBuildDirectoryTree (Directory root) (dirName : path) xs
   | otherwise = do
     let y = words x
     if head y == "dir"
@@ -38,8 +38,19 @@ doBuildDirectoryTree (Directory root) path (x:xs)
         doBuildDirectoryTree (addFile filename file path (Directory root)) path xs
 
 addFile :: String -> File -> [String] -> File -> File -- filename -> actual file -> path -> current root -> new root
-addFile _ _ [] root = root
-addFile filename file path (Directory root) = Directory (Map.insert filename file root)
+addFile filename file [] (Directory root) = Directory (Map.insert filename file root)
+addFile filename file (currDir:restPath) (Directory root) = do
+  let atPath = getFile (currDir:restPath) (Directory root)
+  case atPath of
+    Directory dirAtPath -> do
+      let withNew = Directory (Map.insert filename file dirAtPath)
+      addFile currDir withNew restPath (Directory root)
+
+getFile :: [String] -> File -> File -- path -> dir -> found file
+-- wrong answers only
+--getFile _ file = file
+getFile [] file = file
+getFile (x:xs) (Directory dir) = getFile xs (dir Map.! x)
 
 findDirs :: File -> [File]
 findDirs dir = [dir]
