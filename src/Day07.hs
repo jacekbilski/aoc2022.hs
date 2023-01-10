@@ -1,11 +1,11 @@
-module Day07 (day07_1, day07_2) where
+module Day07 (day07_1, day07_2, File(..), addFile, getFile, findDirs) where
 
 import Data.List (isPrefixOf)
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
 import Flow
 
-data File = RegularFile Int | Directory (Map String File)
+data File = RegularFile Int | Directory (Map String File) deriving (Show)
 
 day07_1 :: [String] -> Int
 day07_1 input = findDirs (buildDirectoryTree input) |> filter (\d -> size d <= 100000) |> map size |> sum
@@ -14,7 +14,7 @@ buildDirectoryTree :: [String] -> File
 buildDirectoryTree = doBuildDirectoryTree (Directory (Map.fromList [("/", Directory Map.empty)])) []
 
 doBuildDirectoryTree :: File -> [String] -> [String] -> File -- root -> current path -> input -> final directory tree
---doBuildDirectoryTree (RegularFile _) _ = error "/ cannot be a regular file"
+doBuildDirectoryTree (RegularFile _) _ _ = error "/ cannot be a regular file"
 doBuildDirectoryTree root _ [] = root
 doBuildDirectoryTree (Directory root) path (x:xs)
   | x == "$ cd /" =  -- I do hope this is just the first command and happens just once
