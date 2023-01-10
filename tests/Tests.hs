@@ -46,29 +46,27 @@ test_aoc = testGroup "Advent of Code 2022" [
 unit_getFile1 :: Assertion
 unit_getFile1 = do
   let root = Directory (Map.fromList [("/", Directory Map.empty)])
---  let file = RegularFile 1
---  let newRoot = addFile "a" file ["/"] root
   let foundRoot = getFile ["/"] root
-  print ("getFile1 'getFile [\"/\"] root': " ++ show foundRoot)
+--  print ("getFile1 'getFile [\"/\"] root': " ++ show foundRoot)
   case foundRoot of
     Directory dir -> assertBool "abc" (Map.null dir)
 
 unit_getFile2 :: Assertion
 unit_getFile2 = do
   let root = Directory (Map.fromList [("/", Directory Map.empty)])
-  print ("getFile2 root: " ++ show root)
+--  print ("getFile2 root: " ++ show root)
   let file = RegularFile 1
   let newRoot = addFile "a" file ["/"] root
-  print ("getFile2 'addFile \"a\" file [\"/\"] root': " ++ show newRoot)
+--  print ("getFile2 'addFile \"a\" file [\"/\"] root': " ++ show newRoot)
   let foundRoot = getFile ["/"] newRoot
-  print ("getFile2 'getFile [\"/\"] newRoot': " ++ show foundRoot)
+--  print ("getFile2 'getFile [\"/\"] newRoot': " ++ show foundRoot)
   case foundRoot of
     Directory dir -> do
       assertEqual "size" 1 (Map.size dir)
 
 unit_findDirs :: Assertion
 unit_findDirs = do
-  let root = Directory (Map.fromList [("/", Directory Map.empty)])
+  let root = Directory Map.empty
   let dirs = findDirs root
-  print dirs
+--  print dirs
   assertEqual "size" 1 (length dirs)

@@ -11,14 +11,14 @@ day07_1 :: [String] -> Int
 day07_1 input = findDirs (buildDirectoryTree input) |> filter (\d -> size d <= 100000) |> map size |> sum
 
 buildDirectoryTree :: [String] -> File
-buildDirectoryTree = doBuildDirectoryTree (Directory (Map.fromList [("/", Directory Map.empty)])) []
+buildDirectoryTree = doBuildDirectoryTree (Directory Map.empty) []
 
 doBuildDirectoryTree :: File -> [String] -> [String] -> File -- root -> current path -> input -> final directory tree
 doBuildDirectoryTree (RegularFile _) _ _ = error "/ cannot be a regular file"
 doBuildDirectoryTree root _ [] = root
 doBuildDirectoryTree (Directory root) path (x:xs)
   | x == "$ cd /" =  -- I do hope this is just the first command and happens just once
-    doBuildDirectoryTree (Directory root) ["/"] xs
+    doBuildDirectoryTree (Directory root) [] xs
   | x == "$ ls" = doBuildDirectoryTree (Directory root) path xs -- nothing to do
   | "$ cd " `isPrefixOf` x = do
     let dirName = drop 5 x
