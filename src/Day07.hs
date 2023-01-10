@@ -1,4 +1,4 @@
-module Day07 (day07_1, day07_2, File(..), addFile, getFile, findDirs) where
+module Day07 (day07_1, day07_2) where
 
 import Data.List (isPrefixOf, sort)
 import Data.Map.Strict (Map)

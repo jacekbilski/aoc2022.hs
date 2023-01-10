@@ -44,7 +44,6 @@ test-suite test-aoc2022
        ,tasty-hunit
        ,tasty-discover
        ,aoc2022
-       ,containers
     hs-source-dirs:     tests
     default-language:   Haskell2010
     ghc-options: -Wall
