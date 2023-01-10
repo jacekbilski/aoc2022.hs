@@ -54,9 +54,8 @@ doGetFile [] file = file
 doGetFile (x:xs) (Directory dir) = getFile xs (dir Map.! x)
 
 findDirs :: File -> [File]
-findDirs dir = [dir]
---findDirs (Directory _ [files]) = []
---findDirs (RegularFile _ _) = []
+findDirs (Directory dir) = Directory dir : (Map.elems dir |> concatMap findDirs)
+findDirs (RegularFile _) = []
 
 size :: File -> Int
 size (Directory dir) = Map.elems dir |> map size |> sum
