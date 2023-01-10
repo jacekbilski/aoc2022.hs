@@ -12,12 +12,12 @@ dayTestCase day input expectedResult = do
 labeledDayTestCase :: (Show a, Eq a) => String -> ([String] -> a) -> FilePath -> a -> TestTree
 labeledDayTestCase name day input expectedResult = testCase name $ dayTestCase day input expectedResult
 
-dayExampleTestCase :: (Show a, Eq a) => ([String] -> a) -> [String] -> a -> Assertion
+dayExampleTestCase :: (Show a, Eq a) => ([String] -> IO a) -> [String] -> a -> Assertion
 dayExampleTestCase day input expectedResult = do
-  let result = day input
+  result <- day input
   assertEqual ("It's " ++ show expectedResult) expectedResult result
 
-labeledDayExampleTestCase :: (Show a, Eq a) => String -> ([String] -> a) -> [String] -> a -> TestTree
+labeledDayExampleTestCase :: (Show a, Eq a) => String -> ([String] -> IO a) -> [String] -> a -> TestTree
 labeledDayExampleTestCase name day input expectedResult = testCase name $ dayExampleTestCase day input expectedResult
 
 test_aoc :: TestTree

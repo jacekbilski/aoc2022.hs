@@ -39,3 +39,4 @@ day03_2 input = do
 
 findGroupType :: [String] -> Char
 findGroupType [a,b,c] = intersect a b |> intersect c |> head
+findGroupType _ = error "A group must have 3 elements"
