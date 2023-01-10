@@ -1,9 +1,12 @@
 module Day07 (day07_1, day07_2, File(..), addFile, getFile, findDirs) where
 
-import Data.List (isPrefixOf)
+import Data.List (isPrefixOf, sort)
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
 import Flow
+
+totalDiskSpace = 70000000 :: Int
+requiredFreeSpace = 30000000 :: Int
 
 data File = RegularFile Int | Directory (Map String File) deriving (Show)
 
@@ -62,4 +65,8 @@ size (Directory dir) = Map.elems dir |> map size |> sum
 size (RegularFile s) = s
 
 day07_2 :: [String] -> Int
-day07_2 _ = -1
+day07_2 input = do
+  let root = buildDirectoryTree input
+  let freeSpace = totalDiskSpace - size root
+  let spaceToRecover = requiredFreeSpace - freeSpace
+  findDirs root |> map size |> filter (>= spaceToRecover) |> sort |> head
