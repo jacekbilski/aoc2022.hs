@@ -51,7 +51,7 @@ getFile path = doGetFile (reverse path)
 
 doGetFile :: [String] -> File -> File -- path -> dir -> found file
 doGetFile [] file = file
-doGetFile (x:xs) (Directory dir) = getFile xs (dir Map.! x)
+doGetFile (x:xs) (Directory dir) = doGetFile xs (dir Map.! x)
 
 findDirs :: File -> [File]
 findDirs (Directory dir) = Directory dir : (Map.elems dir |> concatMap findDirs)

@@ -35,7 +35,7 @@ test_aoc = testGroup "Advent of Code 2022" [
    ,labeledDayTestCase "day 05 part 2" day05_2 "inputs/day05.input" "NHWZCBNBF"
    ,labeledDayTestCase "day 06 part 1" day06_1 "inputs/day06.input" 1109
    ,labeledDayTestCase "day 06 part 2" day06_2 "inputs/day06.input" 3965
-   ,labeledDayTestCase "day 07 part 1" day07_1 "inputs/day07.input" (-1)
+   ,labeledDayTestCase "day 07 part 1" day07_1 "inputs/day07.input" 1783610
    ,labeledDayTestCase "day 07 part 2" day07_2 "inputs/day07.input" (-1)
    ,labeledDayExampleTestCase "day 07 example 1" day07_1 ["$ cd /"] 0
    ,labeledDayExampleTestCase "day 07 example 2" day07_1 ["$ cd /", "$ ls", "123 x"] 123
@@ -45,21 +45,21 @@ test_aoc = testGroup "Advent of Code 2022" [
 
 unit_getFile1 :: Assertion
 unit_getFile1 = do
-  let root = Directory (Map.fromList [("/", Directory Map.empty)])
-  let foundRoot = getFile ["/"] root
---  print ("getFile1 'getFile [\"/\"] root': " ++ show foundRoot)
+  let root = Directory Map.empty
+  let foundRoot = getFile [] root
+--  print ("getFile1 'getFile [] root': " ++ show foundRoot)
   case foundRoot of
     Directory dir -> assertBool "abc" (Map.null dir)
 
 unit_getFile2 :: Assertion
 unit_getFile2 = do
-  let root = Directory (Map.fromList [("/", Directory Map.empty)])
+  let root = Directory Map.empty
 --  print ("getFile2 root: " ++ show root)
   let file = RegularFile 1
-  let newRoot = addFile "a" file ["/"] root
---  print ("getFile2 'addFile \"a\" file [\"/\"] root': " ++ show newRoot)
-  let foundRoot = getFile ["/"] newRoot
---  print ("getFile2 'getFile [\"/\"] newRoot': " ++ show foundRoot)
+  let newRoot = addFile "a" file [] root
+--  print ("getFile2 'addFile \"a\" file [] root': " ++ show newRoot)
+  let foundRoot = getFile [] newRoot
+--  print ("getFile2 'getFile [] newRoot': " ++ show foundRoot)
   case foundRoot of
     Directory dir -> do
       assertEqual "size" 1 (Map.size dir)
