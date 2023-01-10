@@ -1,12 +1,15 @@
 module Day07 (day07_1, day07_2) where
 
-import Data.List (isPrefixOf, sort)
+import Data.List (isPrefixOf)
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
 import Flow
 
-totalDiskSpace = 70000000 :: Int
-requiredFreeSpace = 30000000 :: Int
+totalDiskSpace :: Int
+totalDiskSpace = 70000000
+
+requiredFreeSpace :: Int
+requiredFreeSpace = 30000000
 
 data File = RegularFile Int | Directory (Map String File) deriving (Show)
 
@@ -41,6 +44,7 @@ doBuildDirectoryTree (Directory root) path (x:xs)
         doBuildDirectoryTree (addFile filename file path (Directory root)) path xs
 
 addFile :: String -> File -> [String] -> File -> File -- filename -> actual file -> path -> current root -> new root
+addFile _ _ _ (RegularFile _) = error "Cannot add file to a file"
 addFile filename file [] (Directory root) = Directory (Map.insert filename file root)
 addFile filename file (currDir:restPath) (Directory root) = do
   let atPath = getFile (currDir:restPath) (Directory root)
@@ -48,6 +52,7 @@ addFile filename file (currDir:restPath) (Directory root) = do
     Directory dirAtPath -> do
       let withNew = Directory (Map.insert filename file dirAtPath)
       addFile currDir withNew restPath (Directory root)
+    RegularFile _ -> error "Cannot add a file to a RegularFile"
 
 getFile :: [String] -> File -> File -- path -> dir -> found file
 getFile path = doGetFile (reverse path)
@@ -55,6 +60,7 @@ getFile path = doGetFile (reverse path)
 doGetFile :: [String] -> File -> File -- path -> dir -> found file
 doGetFile [] file = file
 doGetFile (x:xs) (Directory dir) = doGetFile xs (dir Map.! x)
+doGetFile _ (RegularFile _) = error "Cannot get a file from a RegularFile"
 
 findDirs :: File -> [File]
 findDirs (Directory dir) = Directory dir : (Map.elems dir |> concatMap findDirs)
@@ -69,4 +75,4 @@ day07_2 input = do
   let root = buildDirectoryTree input
   let freeSpace = totalDiskSpace - size root
   let spaceToRecover = requiredFreeSpace - freeSpace
-  findDirs root |> map size |> filter (>= spaceToRecover) |> sort |> head
+  findDirs root |> map size |> filter (>= spaceToRecover) |> minimum
