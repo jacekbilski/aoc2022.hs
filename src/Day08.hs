@@ -6,11 +6,11 @@ import Flow
 
 type XY = (Int, Int)
 
-minHeight :: Int
-minHeight = 0
+minTreeHeight :: Int
+minTreeHeight = 0
 
-maxHeight :: Int
-maxHeight = 9
+maxTreeHeight :: Int
+maxTreeHeight = 9
 
 -- idea: treat input as [[Int]]
 -- walk from all 4 directions through all columns/rows, if a tree is visible, add its coordinates to a set of visible trees
@@ -28,17 +28,38 @@ day08_1 input = do
   Set.size (Set.unions [topDown, rightToLeft, bottomUp, leftToRight])
 
 countVisible :: [[Int]] -> [XY] -> Set XY  -- grid -> positions -> visible trees
-countVisible = doCountVisible Set.empty (minHeight - 1)
+countVisible = doCountVisible Set.empty (minTreeHeight - 1)
 
 doCountVisible :: Set XY -> Int -> [[Int]] -> [XY] -> Set XY  -- visible trees so far -> currMaxHeight -> grid -> positions -> visible trees
 doCountVisible found _ _ [] = found
 doCountVisible found currMaxHeight grid (pos:rest)
-  | currMaxHeight == maxHeight = found  -- we'll not find any higher tree and can stop here
+  | currMaxHeight == maxTreeHeight = found  -- we'll not find any higher tree and can stop here
   | otherwise = do
     let tree = grid !! snd pos !! fst pos
     if tree > currMaxHeight
       then doCountVisible (Set.insert pos found) tree grid rest
       else doCountVisible found currMaxHeight grid rest
 
-day08_2 :: [String] -> Int
-day08_2 _ = undefined
+day08_2 :: [String] -> IO Int
+day08_2 input = do
+  let grid :: [[Int]] = map (map (\c -> read [c])) input
+  let width = length (head grid)
+  let height = length grid
+  let interestingTrees = [(x,y) | x <- [1..width-2], y <- [1..height-2]]
+  return (map (calcScenicScore grid) interestingTrees |> maximum)
+
+calcScenicScore :: [[Int]] -> XY -> Int
+calcScenicScore grid tree = do
+  -1
+
+type Direction = Int -> Int -> XY -> Maybe XY -- gridWidth -> gridHeight -> pos -> newPos
+
+up :: Direction
+up _ _ pos
+  | snd pos > 0 = Just (fst pos, snd pos - 1)
+  | otherwise = Nothing
+
+down :: Direction
+down _ gridHeight pos
+  | snd pos < gridHeight = Just (fst pos, snd pos + 1)
+  | otherwise = Nothing
