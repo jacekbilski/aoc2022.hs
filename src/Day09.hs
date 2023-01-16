@@ -14,7 +14,7 @@ type Instruction = (Direction, Int)
 day09_1 :: [String] -> Int
 day09_1 input = do
   let instructions = parseInput input
-  walk (Set.fromList [(0, 0)]) (0, 0) (0, 0) instructions |> Set.size
+  walk (Set.fromList [(0, 0)]) [(0, 0), (0, 0)] instructions |> Set.size
 
 parseInput :: [String] -> [Instruction]
 parseInput = map (\i -> (parseDirection (head i), read (drop 2 i)))
@@ -25,13 +25,20 @@ parseDirection 'D' = Down
 parseDirection 'L' = Left
 parseDirection 'R' = Right
 
-walk :: Set Coords -> Coords -> Coords -> [Instruction] -> Set Coords
-walk visited _ _ [] = visited
-walk visited h t ((_, 0) : is) = walk visited h t is
-walk visited h t ((dir, steps) : is) = do
-  let newHead = moveHead h dir
-  let newTail = moveTail t newHead
-  walk (Set.insert newTail visited) newHead newTail ((dir, steps - 1) : is)
+walk :: Set Coords -> [Coords] -> [Instruction] -> Set Coords
+walk visited _ [] = visited
+walk visited rope ((_, 0) : is) = walk visited rope is
+walk visited rope ((dir, steps) : is) = do
+  let newRope = moveRope rope dir
+  walk (Set.insert (last newRope) visited) newRope ((dir, steps - 1) : is)
+
+moveRope :: [Coords] -> Direction -> [Coords]
+moveRope rope dir = doMoveRope dir [] rope
+
+doMoveRope :: Direction -> [Coords] -> [Coords] -> [Coords]
+doMoveRope _ ropeHead [] = reverse ropeHead
+doMoveRope dir [] (this:ropeTail) = doMoveRope dir [moveHead this dir] ropeTail
+doMoveRope dir (previous:ropeHead) (this:ropeTail) = doMoveRope dir (moveKnot this previous:previous:ropeHead) ropeTail
 
 moveHead :: Coords -> Direction -> Coords
 moveHead (x, y) Up = (x, y + 1)
@@ -39,34 +46,34 @@ moveHead (x, y) Down = (x, y - 1)
 moveHead (x, y) Left = (x - 1, y)
 moveHead (x, y) Right = (x + 1, y)
 
-moveTail :: Coords -> Coords -> Coords
-moveTail t h = doMoveTail t (diff h t)
+moveKnot :: Coords -> Coords -> Coords
+moveKnot this previous = doMoveKnot this (diff previous this)
 
 diff :: Coords -> Coords -> Coords
 diff (x1, y1) (x2, y2) = (x1 - x2, y1 - y2)
 
-doMoveTail :: Coords -> Coords -> Coords
-doMoveTail t (dx, dy)
-  | abs dx + abs dy > 1 = reallyDoMoveTail t (dx, dy)
+doMoveKnot :: Coords -> Coords -> Coords
+doMoveKnot t (dx, dy)
+  | abs dx + abs dy > 1 = reallyDoMoveKnot t (dx, dy)
   | otherwise = t
 
-reallyDoMoveTail :: Coords -> Coords -> Coords
-reallyDoMoveTail (tx, ty) (2, 0) = (tx + 1, ty)
-reallyDoMoveTail (tx, ty) (-2, 0) = (tx - 1, ty)
-reallyDoMoveTail (tx, ty) (0, 2) = (tx, ty + 1)
-reallyDoMoveTail (tx, ty) (0, -2) = (tx, ty - 1)
-reallyDoMoveTail (tx, ty) (1, 1) = (tx, ty)
-reallyDoMoveTail (tx, ty) (1, -1) = (tx, ty)
-reallyDoMoveTail (tx, ty) (-1, 1) = (tx, ty)
-reallyDoMoveTail (tx, ty) (-1, -1) = (tx, ty)
-reallyDoMoveTail (tx, ty) (1, 2) = (tx + 1, ty + 1)
-reallyDoMoveTail (tx, ty) (2, 1) = (tx + 1, ty + 1)
-reallyDoMoveTail (tx, ty) (1, -2) = (tx + 1, ty -1)
-reallyDoMoveTail (tx, ty) (2, -1) = (tx + 1, ty -1)
-reallyDoMoveTail (tx, ty) (-1, 2) = (tx -1, ty + 1)
-reallyDoMoveTail (tx, ty) (-2, 1) = (tx -1, ty + 1)
-reallyDoMoveTail (tx, ty) (-1, -2) = (tx -1, ty -1)
-reallyDoMoveTail (tx, ty) (-2, -1) = (tx -1, ty -1)
+reallyDoMoveKnot :: Coords -> Coords -> Coords
+reallyDoMoveKnot (x, y) (2, 0) = (x + 1, y)
+reallyDoMoveKnot (x, y) (-2, 0) = (x - 1, y)
+reallyDoMoveKnot (x, y) (0, 2) = (x, y + 1)
+reallyDoMoveKnot (x, y) (0, -2) = (x, y - 1)
+reallyDoMoveKnot (x, y) (1, 1) = (x, y)
+reallyDoMoveKnot (x, y) (1, -1) = (x, y)
+reallyDoMoveKnot (x, y) (-1, 1) = (x, y)
+reallyDoMoveKnot (x, y) (-1, -1) = (x, y)
+reallyDoMoveKnot (x, y) (1, 2) = (x + 1, y + 1)
+reallyDoMoveKnot (x, y) (2, 1) = (x + 1, y + 1)
+reallyDoMoveKnot (x, y) (1, -2) = (x + 1, y -1)
+reallyDoMoveKnot (x, y) (2, -1) = (x + 1, y -1)
+reallyDoMoveKnot (x, y) (-1, 2) = (x -1, y + 1)
+reallyDoMoveKnot (x, y) (-2, 1) = (x -1, y + 1)
+reallyDoMoveKnot (x, y) (-1, -2) = (x -1, y -1)
+reallyDoMoveKnot (x, y) (-2, -1) = (x -1, y -1)
 
 day09_2 :: [String] -> Int
 day09_2 _ = undefined
