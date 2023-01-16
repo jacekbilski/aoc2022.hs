@@ -58,26 +58,11 @@ doMoveKnot t (dx, dy)
   | otherwise = t
 
 reallyDoMoveKnot :: Coords -> Coords -> Coords
-reallyDoMoveKnot (x, y) (2, 0) = (x + 1, y)
-reallyDoMoveKnot (x, y) (-2, 0) = (x - 1, y)
-reallyDoMoveKnot (x, y) (0, 2) = (x, y + 1)
-reallyDoMoveKnot (x, y) (0, -2) = (x, y - 1)
 reallyDoMoveKnot (x, y) (1, 1) = (x, y)
 reallyDoMoveKnot (x, y) (1, -1) = (x, y)
 reallyDoMoveKnot (x, y) (-1, 1) = (x, y)
 reallyDoMoveKnot (x, y) (-1, -1) = (x, y)
-reallyDoMoveKnot (x, y) (1, 2) = (x + 1, y + 1)
-reallyDoMoveKnot (x, y) (2, 1) = (x + 1, y + 1)
-reallyDoMoveKnot (x, y) (1, -2) = (x + 1, y - 1)
-reallyDoMoveKnot (x, y) (2, -1) = (x + 1, y - 1)
-reallyDoMoveKnot (x, y) (-1, 2) = (x - 1, y + 1)
-reallyDoMoveKnot (x, y) (-2, 1) = (x - 1, y + 1)
-reallyDoMoveKnot (x, y) (-1, -2) = (x - 1, y - 1)
-reallyDoMoveKnot (x, y) (-2, -1) = (x - 1, y - 1)
-reallyDoMoveKnot (x, y) (2, 2) = (x + 1, y + 1)
-reallyDoMoveKnot (x, y) (2, -2) = (x + 1, y - 1)
-reallyDoMoveKnot (x, y) (-2, 2) = (x - 1, y + 1)
-reallyDoMoveKnot (x, y) (-2, -2) = (x - 1, y - 1)
+reallyDoMoveKnot (x, y) (dx, dy) = (x + signum dx, y + signum dy)
 
 day09_2 :: [String] -> Int
 day09_2 input = do
