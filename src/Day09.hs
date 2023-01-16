@@ -2,6 +2,7 @@ module Day09 (day09_1, day09_2) where
 
 import Data.Set (Set)
 import qualified Data.Set as Set
+import Flow
 import Prelude hiding (Left, Right)
 
 type Coords = (Int, Int)
@@ -10,11 +11,10 @@ data Direction = Up | Down | Left | Right
 
 type Instruction = (Direction, Int)
 
-day09_1 :: [String] -> IO Int
+day09_1 :: [String] -> Int
 day09_1 input = do
   let instructions = parseInput input
-  let visited = walk (Set.fromList [(0, 0)]) (0, 0) (0, 0) instructions
-  return (Set.size visited)
+  walk (Set.fromList [(0, 0)]) (0, 0) (0, 0) instructions |> Set.size
 
 parseInput :: [String] -> [Instruction]
 parseInput = map (\i -> (parseDirection (head i), read (drop 2 i)))

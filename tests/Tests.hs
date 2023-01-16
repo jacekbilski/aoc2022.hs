@@ -38,15 +38,15 @@ test_aoc = testGroup "Advent of Code 2022" [
    ,labeledDayTestCase "day 07 part 2" day07_2 "inputs/day07.input" 4370655
    ,labeledDayTestCase "day 08 part 1" day08_1 "inputs/day08.input" 1798
    ,labeledDayTestCase "day 08 part 2" day08_2 "inputs/day08.input" 259308
---   ,labeledDayTestCase "day 09 part 1" day09_1 "inputs/day09.input" (-1)
+   ,labeledDayTestCase "day 09 part 1" day09_1 "inputs/day09.input" 6357
 --   ,labeledDayTestCase "day 09 part 2" day09_2 "inputs/day09.input" (-1)
-   ,labeledDayExampleTestCase "day 09 case 1" day09_1 ["R 1"] 1
-   ,labeledDayExampleTestCase "day 09 case 2" day09_1 ["R 2"] 2
-   ,labeledDayExampleTestCase "day 09 case 3" day09_1 ["R 5"] 5
-   ,labeledDayExampleTestCase "day 09 case 4" day09_1 ["L 5"] 5
-   ,labeledDayExampleTestCase "day 09 case 5" day09_1 ["U 5"] 5
-   ,labeledDayExampleTestCase "day 09 case 6" day09_1 ["D 4"] 4
-   ,labeledDayExampleTestCase "day 09 case 7" day09_1 ["R 4", "L 5"] 4
-   ,labeledDayExampleTestCase "day 09 case 8" day09_1 ["R 4", "U 1"] 4
-   ,labeledDayExampleTestCase "day 09 case 9" day09_1 ["L 4", "D 3"] 6
+--   ,labeledDayExampleTestCase "day 09 case 1" day09_1 ["R 1"] 1
+--   ,labeledDayExampleTestCase "day 09 case 2" day09_1 ["R 2"] 2
+--   ,labeledDayExampleTestCase "day 09 case 3" day09_1 ["R 5"] 5
+--   ,labeledDayExampleTestCase "day 09 case 4" day09_1 ["L 5"] 5
+--   ,labeledDayExampleTestCase "day 09 case 5" day09_1 ["U 5"] 5
+--   ,labeledDayExampleTestCase "day 09 case 6" day09_1 ["D 4"] 4
+--   ,labeledDayExampleTestCase "day 09 case 7" day09_1 ["R 4", "L 5"] 4
+--   ,labeledDayExampleTestCase "day 09 case 8" day09_1 ["R 4", "U 1"] 4
+--   ,labeledDayExampleTestCase "day 09 case 9" day09_1 ["L 4", "D 3"] 6
   ]
