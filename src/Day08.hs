@@ -15,7 +15,7 @@ maxTreeHeight = 9
 
 day08_1 :: [String] -> Int
 day08_1 input = do
-  let grid :: Grid = map (map (\c -> read [c])) input
+  let grid = getGrid input
   let w = width grid
   let h = height grid
   let topDown = map (, 0::Int) [0..w-1] |> map (\t -> map (fst t, ) [0..h-1]) |> map (countVisible grid) |> Set.unions
@@ -31,14 +31,12 @@ doCountVisible :: Set Tree -> Int -> Grid -> [Tree] -> Set Tree  -- visible tree
 doCountVisible visible _ _ [] = visible
 doCountVisible visible currMaxHeight grid (tree:rest)
   | currMaxHeight == maxTreeHeight = visible  -- we'll not find any higher tree and can stop here
-  | otherwise = do
-    if treeHeight grid tree > currMaxHeight
-      then doCountVisible (Set.insert tree visible) (treeHeight grid tree) grid rest
-      else doCountVisible visible currMaxHeight grid rest
+  | currMaxHeight < treeHeight grid tree = doCountVisible (Set.insert tree visible) (treeHeight grid tree) grid rest
+  | otherwise = doCountVisible visible currMaxHeight grid rest
 
 day08_2 :: [String] -> Int
 day08_2 input = do
-  let grid :: Grid = map (map (\c -> read [c])) input
+  let grid = getGrid input
   let interestingTrees = [(x,y) | x <- [1..width grid-2], y <- [1..height grid-2]]  -- edges, by definition have scenicScore = 0, because there are no trees in at least one direction
   map (calcScenicScore grid) interestingTrees |> maximum
 
@@ -56,7 +54,7 @@ countVisibleInDirection :: Grid -> Direction -> Tree -> Int -- grid -> dir -> tr
 countVisibleInDirection grid dir tree = do
   doCountVisibleInDirection grid dir (treeHeight grid tree) (dir tree) 0
 
-doCountVisibleInDirection :: Grid -> Direction -> Int -> Maybe Tree -> Int -> Int  -- grid -> dir -> houseTreeHeight -> tree -> countedSoFar ->  count
+doCountVisibleInDirection :: Grid -> Direction -> Int -> Maybe Tree -> Int -> Int  -- grid -> dir -> houseTreeHeight -> tree -> countedSoFar -> count
 doCountVisibleInDirection _ _ _ Nothing countedSoFar = countedSoFar
 doCountVisibleInDirection grid dir houseTreeHeight (Just tree) countedSoFar
   | houseTreeHeight <= treeHeight grid tree = countedSoFar + 1
@@ -81,6 +79,9 @@ gridRight :: Grid -> Direction
 gridRight grid pos
   | fst pos < width grid - 1 = Just (fst pos + 1, snd pos)
   | otherwise = Nothing
+
+getGrid :: [String] -> Grid
+getGrid = map (map (\c -> read [c]))
 
 width :: Grid -> Int
 width grid = length (head grid)
