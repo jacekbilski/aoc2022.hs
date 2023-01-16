@@ -55,6 +55,10 @@ reallyDoMoveTail (tx, ty) (2, 0) = (tx + 1, ty)
 reallyDoMoveTail (tx, ty) (-2, 0) = (tx - 1, ty)
 reallyDoMoveTail (tx, ty) (0, 2) = (tx, ty + 1)
 reallyDoMoveTail (tx, ty) (0, -2) = (tx, ty - 1)
+reallyDoMoveTail (tx, ty) (1, 1) = (tx, ty)
+reallyDoMoveTail (tx, ty) (1, -1) = (tx, ty)
+reallyDoMoveTail (tx, ty) (-1, 1) = (tx, ty)
+reallyDoMoveTail (tx, ty) (-1, -1) = (tx, ty)
 
 day09_2 :: [String] -> Int
 day09_2 _ = undefined
