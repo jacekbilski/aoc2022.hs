@@ -60,23 +60,23 @@ doCountVisibleInDirection dir grid houseTreeHeight (Just tree) countedSoFar
   | otherwise = doCountVisibleInDirection dir grid houseTreeHeight (dir tree) (countedSoFar + 1)
 
 gridUp :: Grid -> Direction
-gridUp _ pos
-  | snd pos > 0 = Just (fst pos, snd pos - 1)
+gridUp _ (x, y)
+  | y > 0 = Just (x, y - 1)
   | otherwise = Nothing
 
 gridDown :: Grid -> Direction
-gridDown grid pos
-  | snd pos < height grid - 1 = Just (fst pos, snd pos + 1)
+gridDown grid (x, y)
+  | y < height grid - 1 = Just (x, y + 1)
   | otherwise = Nothing
 
 gridLeft :: Grid -> Direction
-gridLeft _ pos
-  | fst pos > 0 = Just (fst pos - 1, snd pos)
+gridLeft _ (x, y)
+  | x > 0 = Just (x - 1, y)
   | otherwise = Nothing
 
 gridRight :: Grid -> Direction
-gridRight grid pos
-  | fst pos < width grid - 1 = Just (fst pos + 1, snd pos)
+gridRight grid (x, y)
+  | x < width grid - 1 = Just (x + 1, y)
   | otherwise = Nothing
 
 getGrid :: [String] -> Grid
@@ -89,4 +89,4 @@ height :: Grid -> Int
 height = length
 
 treeHeight :: Grid -> Tree -> Int
-treeHeight grid tree = grid !! snd tree !! fst tree
+treeHeight grid (x, y) = grid !! y !! x
