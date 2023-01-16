@@ -37,8 +37,8 @@ moveRope rope dir = doMoveRope dir [] rope
 
 doMoveRope :: Direction -> [Coords] -> [Coords] -> [Coords]
 doMoveRope _ ropeHead [] = reverse ropeHead
-doMoveRope dir [] (this:ropeTail) = doMoveRope dir [moveHead this dir] ropeTail
-doMoveRope dir (previous:ropeHead) (this:ropeTail) = doMoveRope dir (moveKnot this previous:previous:ropeHead) ropeTail
+doMoveRope dir [] (this : ropeTail) = doMoveRope dir [moveHead this dir] ropeTail
+doMoveRope dir (previous : ropeHead) (this : ropeTail) = doMoveRope dir (moveKnot this previous : previous : ropeHead) ropeTail
 
 moveHead :: Coords -> Direction -> Coords
 moveHead (x, y) Up = (x, y + 1)
@@ -68,12 +68,18 @@ reallyDoMoveKnot (x, y) (-1, 1) = (x, y)
 reallyDoMoveKnot (x, y) (-1, -1) = (x, y)
 reallyDoMoveKnot (x, y) (1, 2) = (x + 1, y + 1)
 reallyDoMoveKnot (x, y) (2, 1) = (x + 1, y + 1)
-reallyDoMoveKnot (x, y) (1, -2) = (x + 1, y -1)
-reallyDoMoveKnot (x, y) (2, -1) = (x + 1, y -1)
-reallyDoMoveKnot (x, y) (-1, 2) = (x -1, y + 1)
-reallyDoMoveKnot (x, y) (-2, 1) = (x -1, y + 1)
-reallyDoMoveKnot (x, y) (-1, -2) = (x -1, y -1)
-reallyDoMoveKnot (x, y) (-2, -1) = (x -1, y -1)
+reallyDoMoveKnot (x, y) (1, -2) = (x + 1, y - 1)
+reallyDoMoveKnot (x, y) (2, -1) = (x + 1, y - 1)
+reallyDoMoveKnot (x, y) (-1, 2) = (x - 1, y + 1)
+reallyDoMoveKnot (x, y) (-2, 1) = (x - 1, y + 1)
+reallyDoMoveKnot (x, y) (-1, -2) = (x - 1, y - 1)
+reallyDoMoveKnot (x, y) (-2, -1) = (x - 1, y - 1)
+reallyDoMoveKnot (x, y) (2, 2) = (x + 1, y + 1)
+reallyDoMoveKnot (x, y) (2, -2) = (x + 1, y - 1)
+reallyDoMoveKnot (x, y) (-2, 2) = (x - 1, y + 1)
+reallyDoMoveKnot (x, y) (-2, -2) = (x - 1, y - 1)
 
 day09_2 :: [String] -> Int
-day09_2 _ = undefined
+day09_2 input = do
+  let rope = repeat (0, 0) |> take 10
+  walk (Set.fromList [(0, 0)]) rope (parseInput input) |> Set.size
