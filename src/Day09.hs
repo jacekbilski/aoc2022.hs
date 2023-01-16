@@ -52,6 +52,7 @@ doMoveTail t (dx, dy)
 
 reallyDoMoveTail :: Coords -> Coords -> Coords
 reallyDoMoveTail (tx, ty) (2, 0) = (tx + 1, ty)
+reallyDoMoveTail (tx, ty) (-2, 0) = (tx - 1, ty)
 
 day09_2 :: [String] -> Int
 day09_2 _ = undefined
