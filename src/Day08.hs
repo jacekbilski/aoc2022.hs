@@ -7,6 +7,8 @@ import Flow
 type Tree = (Int, Int)
 type Grid = [[Int]]
 
+type Direction = Tree -> Maybe Tree
+
 minTreeHeight :: Int
 minTreeHeight = 0
 
@@ -18,21 +20,21 @@ day08_1 input = do
   let grid = getGrid input
   let w = width grid
   let h = height grid
-  let topDown = map (, 0::Int) [0..w-1] |> map (\t -> map (fst t, ) [0..h-1]) |> map (countVisible grid) |> Set.unions
-  let rightToLeft = map (w-1, ) [0..h-1] |> map (\t -> map (, snd t) [(w-1), (w-2)..0]) |> map (countVisible grid) |> Set.unions
-  let bottomUp = map (, h-1) [0..w-1] |> map (\t -> map (fst t, ) [h-1,h-2..0]) |> map (countVisible grid) |> Set.unions
-  let leftToRight = map (0::Int, ) [0..h-1] |> map (\t -> map (, snd t) [0..w-1]) |> map (countVisible grid) |> Set.unions
+  let topDown = map (, 0::Int) [0..w-1] |> map (countVisible (gridDown grid) grid) |> Set.unions
+  let rightToLeft = map (w-1, ) [0..h-1] |> map (countVisible (gridLeft grid) grid) |> Set.unions
+  let bottomUp = map (, h-1) [0..w-1] |> map (countVisible (gridUp grid) grid) |> Set.unions
+  let leftToRight = map (0::Int, ) [0..h-1] |> map (countVisible (gridRight grid) grid) |> Set.unions
   Set.size (Set.unions [topDown, rightToLeft, bottomUp, leftToRight])
 
-countVisible :: Grid -> [Tree] -> Set Tree  -- grid -> positions -> visible trees
-countVisible = doCountVisible Set.empty (minTreeHeight - 1)
+countVisible :: Direction -> Grid -> Tree -> Set Tree  -- direction -> grid -> starting tree -> visible trees
+countVisible dir grid startingTree = doCountVisible dir grid (Just startingTree) Set.empty (minTreeHeight - 1)
 
-doCountVisible :: Set Tree -> Int -> Grid -> [Tree] -> Set Tree  -- visible trees so far -> currMaxHeight -> grid -> positions -> visible trees
-doCountVisible visible _ _ [] = visible
-doCountVisible visible currMaxHeight grid (tree:rest)
+doCountVisible :: Direction -> Grid -> Maybe Tree -> Set Tree -> Int -> Set Tree  -- direction -> grid -> currentTree -> visible trees so far -> currMaxHeight -> visible trees
+doCountVisible _ _ Nothing visible _ = visible
+doCountVisible dir grid (Just tree) visible currMaxHeight
   | currMaxHeight == maxTreeHeight = visible  -- we'll not find any higher tree and can stop here
-  | currMaxHeight < treeHeight grid tree = doCountVisible (Set.insert tree visible) (treeHeight grid tree) grid rest
-  | otherwise = doCountVisible visible currMaxHeight grid rest
+  | currMaxHeight < treeHeight grid tree = doCountVisible dir grid (dir tree) (Set.insert tree visible) (treeHeight grid tree)
+  | otherwise = doCountVisible dir grid (dir tree) visible currMaxHeight
 
 day08_2 :: [String] -> Int
 day08_2 input = do
@@ -42,23 +44,20 @@ day08_2 input = do
 
 calcScenicScore :: Grid -> Tree -> Int
 calcScenicScore grid tree = do
-  let visibleToTheTop = countVisibleInDirection grid (gridUp grid) tree
-  let visibleToTheBottom = countVisibleInDirection grid (gridDown grid) tree
-  let visibleToTheLeft = countVisibleInDirection grid (gridLeft grid) tree
-  let visibleToTheRight = countVisibleInDirection grid (gridRight grid) tree
+  let visibleToTheTop = countVisibleInDirection (gridUp grid) grid tree
+  let visibleToTheBottom = countVisibleInDirection (gridDown grid) grid tree
+  let visibleToTheLeft = countVisibleInDirection (gridLeft grid) grid tree
+  let visibleToTheRight = countVisibleInDirection (gridRight grid) grid tree
   visibleToTheTop * visibleToTheBottom * visibleToTheLeft * visibleToTheRight
 
-type Direction = Tree -> Maybe Tree -- tree -> maybe another tree
+countVisibleInDirection :: Direction -> Grid -> Tree -> Int -- grid -> dir -> tree -> count
+countVisibleInDirection dir grid tree = doCountVisibleInDirection dir grid (treeHeight grid tree) (dir tree) 0
 
-countVisibleInDirection :: Grid -> Direction -> Tree -> Int -- grid -> dir -> tree -> count
-countVisibleInDirection grid dir tree = do
-  doCountVisibleInDirection grid dir (treeHeight grid tree) (dir tree) 0
-
-doCountVisibleInDirection :: Grid -> Direction -> Int -> Maybe Tree -> Int -> Int  -- grid -> dir -> houseTreeHeight -> tree -> countedSoFar -> count
+doCountVisibleInDirection :: Direction -> Grid -> Int -> Maybe Tree -> Int -> Int  -- grid -> dir -> houseTreeHeight -> tree -> countedSoFar -> count
 doCountVisibleInDirection _ _ _ Nothing countedSoFar = countedSoFar
-doCountVisibleInDirection grid dir houseTreeHeight (Just tree) countedSoFar
+doCountVisibleInDirection dir grid houseTreeHeight (Just tree) countedSoFar
   | houseTreeHeight <= treeHeight grid tree = countedSoFar + 1
-  | otherwise = doCountVisibleInDirection grid dir houseTreeHeight (dir tree) (countedSoFar + 1)
+  | otherwise = doCountVisibleInDirection dir grid houseTreeHeight (dir tree) (countedSoFar + 1)
 
 gridUp :: Grid -> Direction
 gridUp _ pos
