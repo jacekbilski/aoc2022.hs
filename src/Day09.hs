@@ -40,7 +40,18 @@ moveHead (x, y) Left = (x - 1, y)
 moveHead (x, y) Right = (x + 1, y)
 
 moveTail :: Coords -> Coords -> Coords
-moveTail t h = t
+moveTail t h = doMoveTail t (diff h t)
+
+diff :: Coords -> Coords -> Coords
+diff (x1, y1) (x2, y2) = (x1 - x2, y1 - y2)
+
+doMoveTail :: Coords -> Coords -> Coords
+doMoveTail t (dx, dy)
+  | abs dx + abs dy > 1 = reallyDoMoveTail t (dx, dy)
+  | otherwise = t
+
+reallyDoMoveTail :: Coords -> Coords -> Coords
+reallyDoMoveTail (tx, ty) (2, 0) = (tx + 1, ty)
 
 day09_2 :: [String] -> Int
 day09_2 _ = undefined

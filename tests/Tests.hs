@@ -42,4 +42,5 @@ test_aoc = testGroup "Advent of Code 2022" [
 --   ,labeledDayTestCase "day 09 part 2" day09_2 "inputs/day09.input" (-1)
    ,labeledDayExampleTestCase "day 09 case 1" day09_1 ["R 1"] 1
    ,labeledDayExampleTestCase "day 09 case 2" day09_1 ["R 2"] 2
+   ,labeledDayExampleTestCase "day 09 case 3" day09_1 ["R 5"] 5
   ]
