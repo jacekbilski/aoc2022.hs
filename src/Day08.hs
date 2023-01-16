@@ -52,41 +52,41 @@ calcScenicScore :: [[Int]] -> XY -> Int
 calcScenicScore grid tree = do
   let width = length (head grid)
   let height = length grid
-  let visibleToTheTop = countVisibleInDirection grid (up width height) tree
-  let visibleToTheBottom = countVisibleInDirection grid (down width height) tree
-  let visibleToTheLeft = countVisibleInDirection grid (left width height) tree
-  let visibleToTheRight = countVisibleInDirection grid (right width height) tree
+  let visibleToTheTop = countVisibleInDirection grid (gridUp width height) tree
+  let visibleToTheBottom = countVisibleInDirection grid (gridDown width height) tree
+  let visibleToTheLeft = countVisibleInDirection grid (gridLeft width height) tree
+  let visibleToTheRight = countVisibleInDirection grid (gridRight width height) tree
   visibleToTheTop * visibleToTheBottom * visibleToTheLeft * visibleToTheRight
 
-type Direction = Int -> Int -> XY -> Maybe XY -- gridWidth -> gridHeight -> pos -> newPos
+type Direction = XY -> Maybe XY -- tree -> maybe another tree
 
-countVisibleInDirection :: [[Int]] -> (XY -> Maybe XY) -> XY -> Int -- grid -> dir -> tree/pos -> count
-countVisibleInDirection grid dir pos = do
-  let treeHeight = grid !! snd pos !! fst pos
-  doCountVisibleInDirection grid dir treeHeight (dir pos) 0
+countVisibleInDirection :: [[Int]] -> Direction -> XY -> Int -- grid -> dir -> tree -> count
+countVisibleInDirection grid dir tree = do
+  let treeHeight = grid !! snd tree !! fst tree
+  doCountVisibleInDirection grid dir treeHeight (dir tree) 0
 
-doCountVisibleInDirection :: [[Int]] -> (XY -> Maybe XY) -> Int -> Maybe XY -> Int -> Int  -- grid -> dir -> treeHeight -> pos -> countedSoFar ->  count
+doCountVisibleInDirection :: [[Int]] -> Direction -> Int -> Maybe XY -> Int -> Int  -- grid -> dir -> houseTreeHeight -> tree -> countedSoFar ->  count
 doCountVisibleInDirection _ _ _ Nothing countedSoFar = countedSoFar
-doCountVisibleInDirection grid dir treeHeight (Just pos) countedSoFar
-  | treeHeight <= (grid !! snd pos !! fst pos) = countedSoFar + 1
-  | otherwise = doCountVisibleInDirection grid dir treeHeight (dir pos) (countedSoFar + 1)
+doCountVisibleInDirection grid dir houseTreeHeight (Just tree) countedSoFar
+  | houseTreeHeight <= (grid !! snd tree !! fst tree) = countedSoFar + 1
+  | otherwise = doCountVisibleInDirection grid dir houseTreeHeight (dir tree) (countedSoFar + 1)
 
-up :: Direction
-up _ _ pos
+gridUp :: Int -> Int -> Direction
+gridUp _ _ pos
   | snd pos > 0 = Just (fst pos, snd pos - 1)
   | otherwise = Nothing
 
-down :: Direction
-down _ gridHeight pos
+gridDown :: Int -> Int -> Direction
+gridDown _ gridHeight pos
   | snd pos < gridHeight - 1 = Just (fst pos, snd pos + 1)
   | otherwise = Nothing
 
-left :: Direction
-left _ _ pos
+gridLeft :: Int -> Int -> Direction
+gridLeft _ _ pos
   | fst pos > 0 = Just (fst pos - 1, snd pos)
   | otherwise = Nothing
 
-right :: Direction
-right gridWidth _ pos
+gridRight :: Int -> Int -> Direction
+gridRight gridWidth _ pos
   | fst pos < gridWidth - 1 = Just (fst pos + 1, snd pos)
   | otherwise = Nothing
