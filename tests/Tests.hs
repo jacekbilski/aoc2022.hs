@@ -38,7 +38,8 @@ test_aoc = testGroup "Advent of Code 2022" [
    ,labeledDayTestCase "day 07 part 2" day07_2 "inputs/day07.input" 4370655
    ,labeledDayTestCase "day 08 part 1" day08_1 "inputs/day08.input" 1798
    ,labeledDayTestCase "day 08 part 2" day08_2 "inputs/day08.input" 259308
-   ,labeledDayTestCase "day 09 part 1" day09_1 "inputs/day09.input" (-1)
-   ,labeledDayTestCase "day 09 part 2" day09_2 "inputs/day09.input" (-1)
---   ,labeledDayExampleTestCase "day 08 case 2" day08_2 ["30373", "25512", "65332", "33549", "35390"] 8
+--   ,labeledDayTestCase "day 09 part 1" day09_1 "inputs/day09.input" (-1)
+--   ,labeledDayTestCase "day 09 part 2" day09_2 "inputs/day09.input" (-1)
+   ,labeledDayExampleTestCase "day 09 case 1" day09_1 ["R 1"] 1
+   ,labeledDayExampleTestCase "day 09 case 2" day09_1 ["R 2"] 2
   ]
