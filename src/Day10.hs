@@ -40,14 +40,15 @@ day10_2 input = do
   draw registerHistory
 
 draw :: [RegisterValue] -> [String]
-draw registerHistory = doDraw "" 0 registerHistory |> reverse |> chunksOf screenWidth
+draw registerHistory = doDraw 0 registerHistory "" |> reverse |> chunksOf screenWidth
 
-doDraw :: String -> Int -> [RegisterValue] -> String
-doDraw display _ [] = display
-doDraw display currentCycle ((_, 0) : rvs) = doDraw display currentCycle rvs
-doDraw display currentCycle (rv : rvs)
-  | abs (spriteMiddle - horizontalPosition) <= 1 = doDraw ('#' : display) (currentCycle + 1) ((fst rv, snd rv - 1) : rvs)
-  | otherwise = doDraw ('.' : display) (currentCycle + 1) ((fst rv, snd rv - 1) : rvs)
+doDraw :: Int -> [RegisterValue] -> String -> String
+doDraw _ [] display = display
+doDraw currentCycle ((_, 0) : rvs) display = doDraw currentCycle rvs display
+doDraw currentCycle (rv : rvs) display
+  | abs (spriteMiddle - horizontalPosition) <= 1 = drawNext ('#' : display)
+  | otherwise = drawNext ('.' : display)
   where
     spriteMiddle = fst rv
     horizontalPosition = currentCycle `rem` screenWidth
+    drawNext = doDraw (currentCycle + 1) ((fst rv, snd rv - 1) : rvs)
