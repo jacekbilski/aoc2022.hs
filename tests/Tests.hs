@@ -45,5 +45,13 @@ test_aoc = testGroup "Advent of Code 2022" [
    ,labeledDayTestCase "day 09 part 1" day09_1 "inputs/day09.input" 6357
    ,labeledDayTestCase "day 09 part 2" day09_2 "inputs/day09.input" 2627
    ,labeledDayTestCase "day 10 part 1" day10_1 "inputs/day10.input" 15360
-   ,labeledDayTestCase "day 10 part 2" day10_2 "inputs/day10.input" ["###..#..#.#....#..#...##..##..####..##..","#..#.#..#.#....#..#....#.#..#....#.#..#.","#..#.####.#....####....#.#......#..#..#.","###..#..#.#....#..#....#.#.##..#...####.","#....#..#.#....#..#.#..#.#..#.#....#..#.","#....#..#.####.#..#..##...###.####.#..#."]
+   ,labeledDayTestCase "day 10 part 2" day10_2 "inputs/day10.input" [
+    "###..#..#.#....#..#...##..##..####..##..",
+    "#..#.#..#.#....#..#....#.#..#....#.#..#.",
+    "#..#.####.#....####....#.#......#..#..#.",
+    "###..#..#.#....#..#....#.#.##..#...####.",
+    "#....#..#.#....#..#.#..#.#..#.#....#..#.",
+    "#....#..#.####.#..#..##...###.####.#..#."]
+   ,labeledDayTestCase "day 11 part 1" day11_1 "inputs/day11.input" (-1)
+   ,labeledDayTestCase "day 11 part 2" day11_2 "inputs/day11.input" (-1)
   ]
