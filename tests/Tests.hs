@@ -4,20 +4,24 @@ import AoC2022
 import Test.Tasty
 import Test.Tasty.HUnit
 
-dayTestCase :: (Show a, Eq a) => ([String] -> a) -> FilePath -> a -> Assertion
+type Solution a = [String] -> a
+type Sample a = [String] -> a
+
+dayTestCase :: (Show a, Eq a) => Solution a -> FilePath -> a -> Assertion
 dayTestCase day input expectedResult = do
   result <- solve input day
   assertEqual ("It's " ++ show expectedResult) expectedResult result
 
-labeledDayTestCase :: (Show a, Eq a) => String -> ([String] -> a) -> FilePath -> a -> TestTree
+labeledDayTestCase :: (Show a, Eq a) => String -> Solution a -> FilePath -> a -> TestTree
 labeledDayTestCase name day input expectedResult = testCase name $ dayTestCase day input expectedResult
 
-dayExampleTestCase :: (Show a, Eq a) => ([String] -> IO a) -> [String] -> a -> Assertion
+dayExampleTestCase :: (Show a, Eq a) => Sample a -> [String] -> a -> Assertion
 dayExampleTestCase day input expectedResult = do
-  result <- day input
+--  result <- day input
+  let result = day input
   assertEqual ("It's " ++ show expectedResult) expectedResult result
 
-labeledDayExampleTestCase :: (Show a, Eq a) => String -> ([String] -> IO a) -> [String] -> a -> TestTree
+labeledDayExampleTestCase :: (Show a, Eq a) => String -> Sample a -> [String] -> a -> TestTree
 labeledDayExampleTestCase name day input expectedResult = testCase name $ dayExampleTestCase day input expectedResult
 
 test_aoc :: TestTree
@@ -41,6 +45,5 @@ test_aoc = testGroup "Advent of Code 2022" [
    ,labeledDayTestCase "day 09 part 1" day09_1 "inputs/day09.input" 6357
    ,labeledDayTestCase "day 09 part 2" day09_2 "inputs/day09.input" 2627
    ,labeledDayTestCase "day 10 part 1" day10_1 "inputs/day10.input" 15360
---   ,labeledDayTestCase "day 10 part 2" day10_2 "inputs/day10.input" (-1)
---   ,labeledDayExampleTestCase "day 10 case 1" day10_1 ["noop", "addx 3", "addx -5"] (-1)
+   ,labeledDayTestCase "day 10 part 2" day10_2 "inputs/day10.input" ["###..#..#.#....#..#...##..##..####..##..","#..#.#..#.#....#..#....#.#..#....#.#..#.","#..#.####.#....####....#.#......#..#..#.","###..#..#.#....#..#....#.#.##..#...####.","#....#..#.#....#..#.#..#.#..#.#....#..#.","#....#..#.####.#..#..##...###.####.#..#."]
   ]
