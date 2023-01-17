@@ -5,7 +5,7 @@ import Test.Tasty
 import Test.Tasty.HUnit
 
 type Solution a = [String] -> a
-type Sample a = [String] -> a
+type Sample a = [String] -> IO a
 
 dayTestCase :: (Show a, Eq a) => Solution a -> FilePath -> a -> Assertion
 dayTestCase day input expectedResult = do
@@ -13,16 +13,16 @@ dayTestCase day input expectedResult = do
   assertEqual ("It's " ++ show expectedResult) expectedResult result
 
 labeledDayTestCase :: (Show a, Eq a) => String -> Solution a -> FilePath -> a -> TestTree
-labeledDayTestCase name day input expectedResult = testCase name $ dayTestCase day input expectedResult
+labeledDayTestCase name day input expectedResult = testCase name (dayTestCase day input expectedResult)
 
 dayExampleTestCase :: (Show a, Eq a) => Sample a -> [String] -> a -> Assertion
 dayExampleTestCase day input expectedResult = do
---  result <- day input
-  let result = day input
+  result <- day input
+--  let result = day input
   assertEqual ("It's " ++ show expectedResult) expectedResult result
 
 labeledDayExampleTestCase :: (Show a, Eq a) => String -> Sample a -> [String] -> a -> TestTree
-labeledDayExampleTestCase name day input expectedResult = testCase name $ dayExampleTestCase day input expectedResult
+labeledDayExampleTestCase name day input expectedResult = testCase name (dayExampleTestCase day input expectedResult)
 
 test_aoc :: TestTree
 test_aoc = testGroup "Advent of Code 2022" [
@@ -52,6 +52,13 @@ test_aoc = testGroup "Advent of Code 2022" [
     "###..#..#.#....#..#....#.#.##..#...####.",
     "#....#..#.#....#..#.#..#.#..#.#....#..#.",
     "#....#..#.####.#..#..##...###.####.#..#."]
-   ,labeledDayTestCase "day 11 part 1" day11_1 "inputs/day11.input" (-1)
-   ,labeledDayTestCase "day 11 part 2" day11_2 "inputs/day11.input" (-1)
+--   ,labeledDayTestCase "day 11 part 1" day11_1 "inputs/day11.input" (-1)
+--   ,labeledDayTestCase "day 11 part 2" day11_2 "inputs/day11.input" (-1)
+   ,labeledDayExampleTestCase "day 11 part 1" day11_1 [
+     "Monkey 0:",
+     "  Starting items: 98, 70, 75, 80, 84, 89, 55, 98",
+     "  Operation: new = old * 2",
+     "  Test: divisible by 11",
+     "    If true: throw to monkey 1",
+     "    If false: throw to monkey 4"] (-1)
   ]
