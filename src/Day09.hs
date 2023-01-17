@@ -24,6 +24,7 @@ parseDirection 'U' = Up
 parseDirection 'D' = Down
 parseDirection 'L' = Left
 parseDirection 'R' = Right
+parseDirection dir = error ("Unknown direction " ++ [dir])
 
 walk :: Set Coords -> [Coords] -> [Instruction] -> Set Coords
 walk visited _ [] = visited
