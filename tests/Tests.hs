@@ -52,13 +52,13 @@ test_aoc = testGroup "Advent of Code 2022" [
     "###..#..#.#....#..#....#.#.##..#...####.",
     "#....#..#.#....#..#.#..#.#..#.#....#..#.",
     "#....#..#.####.#..#..##...###.####.#..#."]
---   ,labeledDayTestCase "day 11 part 1" day11_1 "inputs/day11.input" (-1)
+   ,labeledDayTestCase "day 11 part 1" day11_1 "inputs/day11.input" 54253
 --   ,labeledDayTestCase "day 11 part 2" day11_2 "inputs/day11.input" (-1)
-   ,labeledDayExampleTestCase "day 11 part 1" day11_1 [
-     "Monkey 0:",
-     "  Starting items: 98, 70, 75, 80, 84, 89, 55, 98",
-     "  Operation: new = old * 2",
-     "  Test: divisible by 11",
-     "    If true: throw to monkey 1",
-     "    If false: throw to monkey 4"] (-1)
+--   ,labeledDayExampleTestCase "day 11 part 1" day11_1 [
+--     "Monkey 0:",
+--     "  Starting items: 98, 70, 75, 80, 84, 89, 55, 98",
+--     "  Operation: new = old * 2",
+--     "  Test: divisible by 11",
+--     "    If true: throw to monkey 1",
+--     "    If false: throw to monkey 4"] "a"
   ]
