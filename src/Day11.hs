@@ -25,7 +25,8 @@ type Monkeys = Map MonkeyId Monkey
 day11_1 :: [String] -> Int
 day11_1 input = do
   let (monkeys, items) = loadMonkeys input
-  let itemsAfter = rounds monkeys 20 items
+  let relief = (`div` 3)
+  let itemsAfter = rounds monkeys relief 20 items
   snd itemsAfter |> Map.elems |> sort |> reverse |> take 2 |> product
 
 loadMonkeys :: [String] -> (Monkeys, Items)
@@ -59,30 +60,30 @@ loadFunction "+" = (+)
 loadFunction "*" = (*)
 loadFunction f = error ("Function " ++ f ++ " unsupported")
 
-rounds :: Monkeys -> Int -> Items -> Items
-rounds _ 0 items = items
-rounds monkeys roundNo items = rounds monkeys (roundNo-1) (round monkeys items)
+rounds :: Monkeys -> (Int -> Int) -> Int -> Items -> Items
+rounds _ _ 0 items = items
+rounds monkeys relief roundNo items = rounds monkeys relief (roundNo-1) (round monkeys relief items)
 
-round :: Monkeys -> Items -> Items
-round monkeys = do
+round :: Monkeys -> (Int -> Int) -> Items -> Items
+round monkeys relief = do
   let monkeyIds = Map.keys monkeys
-  turns monkeys monkeyIds
+  turns monkeys relief monkeyIds
 
-turns :: Monkeys -> [MonkeyId] -> Items -> Items
-turns _ [] items = items
-turns monkeys (id:ids) items = do
+turns :: Monkeys -> (Int -> Int) -> [MonkeyId] -> Items -> Items
+turns _ _ [] items = items
+turns monkeys relief (id:ids) items = do
   if null (fst items Map.! id)
-    then turns monkeys ids items
+    then turns monkeys relief ids items
     else do
       let item = head (fst items Map.! id)
-      let (newMonkey, newItem) = inspectAndThrow (monkeys Map.! id) item
+      let (newMonkey, newItem) = inspectAndThrow relief (monkeys Map.! id) item
       let newItems = Map.adjust tail id (fst items) |> Map.adjust ([newItem] ++ ) newMonkey
-      turns monkeys (id:ids) (newItems, Map.adjust (+1) id (snd items))
+      turns monkeys relief (id:ids) (newItems, Map.adjust (+1) id (snd items))
 
-inspectAndThrow :: Monkey -> Item -> (MonkeyId, Item)
-inspectAndThrow monkey item = do
+inspectAndThrow :: (Int -> Int) -> Monkey -> Item -> (MonkeyId, Item)
+inspectAndThrow relief monkey item = do
   let withWorryLevel = operation monkey item
-  let afterRelief = withWorryLevel `div` 3
+  let afterRelief = relief withWorryLevel
   if test monkey afterRelief
     then (ifTrue monkey, afterRelief)
     else (ifFalse monkey, afterRelief)
