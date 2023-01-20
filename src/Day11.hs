@@ -11,6 +11,7 @@ import Prelude hiding (id, round)
 type Item = Int
 type MonkeyId = Int
 type Items = (Map MonkeyId [Item], Map MonkeyId Int)  -- (actual items, number of inspections)
+type ReliefFunction = Item -> Item
 
 data Monkey = Monkey
   { id :: MonkeyId,
@@ -60,16 +61,16 @@ loadFunction "+" = (+)
 loadFunction "*" = (*)
 loadFunction f = error ("Function " ++ f ++ " unsupported")
 
-rounds :: Monkeys -> (Int -> Int) -> Int -> Items -> Items
+rounds :: Monkeys -> ReliefFunction -> Int -> Items -> Items
 rounds _ _ 0 items = items
 rounds monkeys relief roundNo items = rounds monkeys relief (roundNo-1) (round monkeys relief items)
 
-round :: Monkeys -> (Int -> Int) -> Items -> Items
+round :: Monkeys -> ReliefFunction -> Items -> Items
 round monkeys relief = do
   let monkeyIds = Map.keys monkeys
   turns monkeys relief monkeyIds
 
-turns :: Monkeys -> (Int -> Int) -> [MonkeyId] -> Items -> Items
+turns :: Monkeys -> ReliefFunction -> [MonkeyId] -> Items -> Items
 turns _ _ [] items = items
 turns monkeys relief (id:ids) items = do
   if null (fst items Map.! id)
@@ -80,7 +81,7 @@ turns monkeys relief (id:ids) items = do
       let newItems = Map.adjust tail id (fst items) |> Map.adjust ([newItem] ++ ) newMonkey
       turns monkeys relief (id:ids) (newItems, Map.adjust (+1) id (snd items))
 
-inspectAndThrow :: (Int -> Int) -> Monkey -> Item -> (MonkeyId, Item)
+inspectAndThrow :: ReliefFunction -> Monkey -> Item -> (MonkeyId, Item)
 inspectAndThrow relief monkey item = do
   let withWorryLevel = operation monkey item
   let afterRelief = relief withWorryLevel
@@ -88,5 +89,10 @@ inspectAndThrow relief monkey item = do
     then (ifTrue monkey, afterRelief)
     else (ifFalse monkey, afterRelief)
 
-day11_2 :: [String] -> Int
-day11_2 input = undefined
+day11_2 :: [String] -> String
+day11_2 input = do
+  let (monkeys, items) = loadMonkeys input
+  let relief = \x -> x
+  let itemsAfter = rounds monkeys relief 10000 items
+  show (snd itemsAfter)
+--  snd itemsAfter |> Map.elems |> sort |> reverse |> take 2 |> product
