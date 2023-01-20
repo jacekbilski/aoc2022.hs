@@ -4,7 +4,7 @@ import Data.List (sort,stripPrefix)
 import Data.List.Split (chunksOf)
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
-import Data.Maybe (fromJust)
+import Data.Maybe (fromJust, isJust)
 import Flow
 import Prelude hiding (id, round)
 
@@ -12,6 +12,7 @@ type Item = Int
 type MonkeyId = Int
 type Items = (Map MonkeyId [Item], Map MonkeyId Int)  -- (actual items, number of inspections)
 type ReliefFunction = Item -> Item
+type NormalizeFunction = Item -> Item
 
 data Monkey = Monkey
   { id :: MonkeyId,
@@ -27,7 +28,8 @@ day11_1 :: [String] -> Int
 day11_1 input = do
   let (monkeys, items) = loadMonkeys input
   let relief = (`div` 3)
-  let itemsAfter = rounds monkeys relief 20 items
+  let normalize = \x -> x
+  let itemsAfter = rounds monkeys relief normalize 20 items
   snd itemsAfter |> Map.elems |> sort |> reverse |> take 2 |> product
 
 loadMonkeys :: [String] -> (Monkeys, Items)
@@ -61,25 +63,26 @@ loadFunction "+" = (+)
 loadFunction "*" = (*)
 loadFunction f = error ("Function " ++ f ++ " unsupported")
 
-rounds :: Monkeys -> ReliefFunction -> Int -> Items -> Items
-rounds _ _ 0 items = items
-rounds monkeys relief roundNo items = rounds monkeys relief (roundNo-1) (round monkeys relief items)
+rounds :: Monkeys -> ReliefFunction -> NormalizeFunction -> Int -> Items -> Items
+rounds _ _ _ 0 items = items
+rounds monkeys relief normalize roundNo items = rounds monkeys relief normalize (roundNo-1) (round monkeys relief normalize items)
 
-round :: Monkeys -> ReliefFunction -> Items -> Items
-round monkeys relief = do
+round :: Monkeys -> ReliefFunction -> NormalizeFunction -> Items -> Items
+round monkeys relief normalize = do
   let monkeyIds = Map.keys monkeys
-  turns monkeys relief monkeyIds
+  turns monkeys relief normalize monkeyIds
 
-turns :: Monkeys -> ReliefFunction -> [MonkeyId] -> Items -> Items
-turns _ _ [] items = items
-turns monkeys relief (id:ids) items = do
+turns :: Monkeys -> ReliefFunction -> NormalizeFunction -> [MonkeyId] -> Items -> Items
+turns _ _ _ [] items = items
+turns monkeys relief normalize (id:ids) items = do
   if null (fst items Map.! id)
-    then turns monkeys relief ids items
+    then turns monkeys relief normalize ids items
     else do
       let item = head (fst items Map.! id)
       let (newMonkey, newItem) = inspectAndThrow relief (monkeys Map.! id) item
-      let newItems = Map.adjust tail id (fst items) |> Map.adjust ([newItem] ++ ) newMonkey
-      turns monkeys relief (id:ids) (newItems, Map.adjust (+1) id (snd items))
+      let normalizedNewItem = normalize newItem
+      let newItems = Map.adjust tail id (fst items) |> Map.adjust ([normalizedNewItem] ++ ) newMonkey
+      turns monkeys relief normalize (id:ids) (newItems, Map.adjust (+1) id (snd items))
 
 inspectAndThrow :: ReliefFunction -> Monkey -> Item -> (MonkeyId, Item)
 inspectAndThrow relief monkey item = do
@@ -89,10 +92,11 @@ inspectAndThrow relief monkey item = do
     then (ifTrue monkey, afterRelief)
     else (ifFalse monkey, afterRelief)
 
-day11_2 :: [String] -> String
+day11_2 :: [String] -> Int
 day11_2 input = do
   let (monkeys, items) = loadMonkeys input
   let relief = \x -> x
-  let itemsAfter = rounds monkeys relief 10000 items
-  show (snd itemsAfter)
---  snd itemsAfter |> Map.elems |> sort |> reverse |> take 2 |> product
+  let leastCommonMultiple = map (stripPrefix "  Test: divisible by ") input |> filter isJust |> map fromJust |> map read |> product
+  let normalize = (`rem` leastCommonMultiple)
+  let itemsAfter = rounds monkeys relief normalize 10000 items
+  snd itemsAfter |> Map.elems |> sort |> reverse |> take 2 |> product
