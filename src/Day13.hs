@@ -1,6 +1,7 @@
 module Day13 (day13_1, day13_2) where
 
 import Data.List.Split (chunksOf)
+import Data.Maybe (fromJust)
 import Flow
 
 data D = N Int | L [D]
@@ -13,10 +14,10 @@ instance Show D where
   show (N x) = show x
   show (L x) = show x
 
-day13_1 :: [String] -> String
+day13_1 :: [String] -> Int
 day13_1 input = do
   let pairs = parseInput input
-  show pairs
+  map (uncurry isRightOrder) pairs |> map fromJust |> zip [1..] |> filter snd |> map fst |> sum
 
 parseInput :: [String] -> [Pair]
 parseInput input = chunksOf 3 input |> map parsePair
@@ -51,6 +52,22 @@ doFindMatchingBracket (c : cx) bracketsToFind idx
   | c == '[' = doFindMatchingBracket cx (bracketsToFind + 1) (idx + 1)
   | c == ']' = doFindMatchingBracket cx (bracketsToFind - 1) (idx + 1)
   | otherwise = doFindMatchingBracket cx bracketsToFind (idx + 1)
+
+isRightOrder :: D -> D -> Maybe Bool
+isRightOrder (N l) (N r)
+  | l < r = Just True
+  | l > r = Just False
+  | otherwise = Nothing
+isRightOrder (L (l:lx)) (L (r:rx)) = do
+  let inOrder = isRightOrder l r
+  case inOrder of
+    Just b -> Just b
+    Nothing -> isRightOrder (L lx) (L rx)
+isRightOrder (L []) (L []) = Nothing
+isRightOrder (L []) (L _) = Just True
+isRightOrder (L _) (L []) = Just False
+isRightOrder (L l) (N r) = isRightOrder (L l) (L [N r])
+isRightOrder (N l) (L r) = isRightOrder (L [N l]) (L r)
 
 day13_2 :: [String] -> Int
 day13_2 _ = undefined
