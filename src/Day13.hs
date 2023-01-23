@@ -1,6 +1,6 @@
 module Day13 (day13_1, day13_2) where
 
-import Data.List.Split (chunksOf, splitOn)
+import Data.List.Split (chunksOf)
 import Flow
 
 data D = N Int | L [D]
@@ -28,7 +28,14 @@ parsePart part
   | otherwise = N (read part)
 
 split :: Char -> String -> [String]
-split char = splitOn [char]
+split delim = doSplit delim [] ""
+
+doSplit :: Char -> [String] -> [Char] -> [Char] -> [String]
+doSplit _ done current [] = (current:done) |> reverse
+--doSplit delim split ('[':rest) =
+doSplit delim done current (c:rest)
+  | c == delim = doSplit delim (current:done) "" rest
+  | otherwise = doSplit delim done (current ++ [c]) rest
 
 day13_2 :: [String] -> Int
 day13_2 _ = undefined
