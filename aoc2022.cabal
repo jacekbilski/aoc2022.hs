@@ -25,7 +25,7 @@ library
     exposed-modules:  AoC2022
 
     -- Modules included in this library but not exported.
-    other-modules: Day01, Day02, Day03, Day04, Day05, Day06, Day07, Day08, Day09, Day10, Day11
+    other-modules: Day01, Day02, Day03, Day04, Day05, Day06, Day07, Day08, Day09, Day10, Day11, Day12
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
