@@ -22,8 +22,8 @@ type Visited = Map Coords Int
 day12_1 :: [String] -> Int
 day12_1 input = do
   let (heightmap, start, end) = parseInput input
-  let visited = walk heightmap start
-  visited Map.! end
+  let visited = walk heightmap end
+  visited Map.! start
 
 parseInput :: [[Char]] -> (Heightmap, Coords, Coords)
 parseInput input = do
@@ -41,22 +41,29 @@ walk :: Heightmap -> Coords -> Visited
 walk heightmap start = do
   step heightmap Map.empty [(start, 0)]
 
+-- it's breadth first, if we visit a location once, any further visits would mean at least the same amount of steps, if not more
 step :: Heightmap -> Visited -> [(Coords, Int)] -> Visited
 step _ visited [] = visited
 step heightmap visited ((coords, inSteps):xs)
   | coords `Map.member` visited = step heightmap visited xs  -- been there, nothing to do
   | otherwise = step heightmap (Map.insert coords inSteps visited) (xs ++ (newReachableFrom heightmap visited coords |> map (, inSteps + 1)))
 
+-- it's descending! so calculated from end to start
 newReachableFrom :: Heightmap -> Visited -> Coords -> [Coords]
 newReachableFrom heightmap visited coords = do
   let heightAt = at heightmap
   let possibilities = [(fst coords, snd coords -1), (fst coords, snd coords + 1), (fst coords -1, snd coords), (fst coords + 1, snd coords)]
   filter (\t -> (fst t >= 0) && (fst t < length (head heightmap)) && (snd t >= 0) && (snd t < length heightmap)) possibilities |> -- within area
     filter (\c -> not (c `Map.member` visited)) |>  -- not yet visited
-    filter (\c -> heightAt c <= heightAt coords + 1) -- not too high
+    filter (\c -> heightAt c >= heightAt coords - 1) -- not too high
 
 at :: Heightmap -> Coords -> Int
 at heightmap coords = heightmap !! snd coords !! fst coords
 
-day12_2 :: [String] -> String
-day12_2 _ = "Nothing yet"
+day12_2 :: [String] -> Int
+day12_2 input = do
+  let (heightmap, start, end) = parseInput input
+  let visited = walk heightmap end
+  let minHeight = heightmap `at` start
+  let heightAt = at heightmap
+  Map.filterWithKey (\k _ -> heightAt k == minHeight) visited |> Map.elems |> minimum
