@@ -19,10 +19,11 @@ type Heightmap = [[Int]]
 
 type Visited = Map Coords Int
 
-day12_1 :: [String] -> String
+day12_1 :: [String] -> Int
 day12_1 input = do
   let (heightmap, start, end) = parseInput input
-  show (walk heightmap start end)
+  let visited = walk heightmap start
+  visited Map.! end
 
 parseInput :: [[Char]] -> (Heightmap, Coords, Coords)
 parseInput input = do
@@ -36,33 +37,23 @@ mapHeight 'S' = mapHeight 'a'
 mapHeight 'E' = mapHeight 'z'
 mapHeight c = ord c
 
-walk :: Heightmap -> Coords -> Coords -> Int
-walk heightmap start end = do
-  let notVisited = filter (/= start) [(x, y) | x <- [0 .. (head heightmap |> length) - 1], y <- [0 .. (length heightmap - 1)]]
-  let visited = doWalk heightmap end 1 (Map.fromList [(start, 0)]) notVisited
-  visited Map.! end
+walk :: Heightmap -> Coords -> Visited
+walk heightmap start = do
+  step heightmap Map.empty [(start, 0)]
 
-doWalk :: Heightmap -> Coords -> Int -> Visited -> [Coords] -> Visited
-doWalk heightmap end round visited notVisited
-  | Map.member end visited = visited
-  | otherwise = do
-    let (newVisited, newNotVisited) = step heightmap end round visited notVisited
-    doWalk heightmap end (round + 1) newVisited newNotVisited
+step :: Heightmap -> Visited -> [(Coords, Int)] -> Visited
+step _ visited [] = visited
+step heightmap visited ((coords, inSteps):xs)
+  | coords `Map.member` visited = step heightmap visited xs  -- been there, nothing to do
+  | otherwise = step heightmap (Map.insert coords inSteps visited) (xs ++ (newReachableFrom heightmap visited coords |> map (, inSteps + 1)))
 
-step :: Heightmap -> Coords -> Int -> Visited -> [Coords] -> (Visited, [Coords])
-step heightmap end round visited = doStep heightmap end round visited []
-
-doStep :: Heightmap -> Coords -> Int -> Visited -> [Coords] -> [Coords] -> (Visited, [Coords])
-doStep _ _ _ visited checked [] = (visited, checked)
-doStep heightmap end round visited checked (current : toCheck)
-  | isReachableFrom heightmap visited end = doStep heightmap end round (Map.insert current round visited) checked toCheck
-  | otherwise = doStep heightmap end round visited (current : checked) toCheck
-
-isReachableFrom :: Heightmap -> Visited -> Coords -> Bool
-isReachableFrom heightmap visited current = do
+newReachableFrom :: Heightmap -> Visited -> Coords -> [Coords]
+newReachableFrom heightmap visited coords = do
   let heightAt = at heightmap
-  let possibilities = [(fst current, snd current -1), (fst current, snd current + 1), (fst current -1, snd current), (fst current + 1, snd current)]
-  filter (`Map.member` visited) possibilities |> map heightAt |> any (>= heightAt current - 1)
+  let possibilities = [(fst coords, snd coords -1), (fst coords, snd coords + 1), (fst coords -1, snd coords), (fst coords + 1, snd coords)]
+  filter (\t -> (fst t >= 0) && (fst t < length (head heightmap)) && (snd t >= 0) && (snd t < length heightmap)) possibilities |> -- within area
+    filter (\c -> not (c `Map.member` visited)) |>  -- not yet visited
+    filter (\c -> heightAt c <= heightAt coords + 1) -- not too high
 
 at :: Heightmap -> Coords -> Int
 at heightmap coords = heightmap !! snd coords !! fst coords
