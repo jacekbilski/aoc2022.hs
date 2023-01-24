@@ -13,8 +13,8 @@ type Coords = (Int, Int)
 day14_1 :: [String] -> Int
 day14_1 input = do
   let slice = parseInput input
---  show slice
-  0
+  let (units, _) = pourSand slice
+  units
 
 parseInput :: [String] -> Slice
 parseInput input = map parsePath input |> foldl mergeSlices Map.empty
@@ -52,6 +52,23 @@ doMergeSlices into [] = into
 doMergeSlices into (x:xs)
  | Map.member (fst x) into = doMergeSlices (Map.adjust (Set.union (snd x)) (fst x) into) xs
  | otherwise = doMergeSlices (uncurry Map.insert x into) xs
+
+pourSand :: Slice -> (Int, Slice)
+pourSand = doPourSand 0
+
+doPourSand :: Int -> Slice -> (Int, Slice)
+doPourSand units slice = do
+  let (newSlice, abyss) = doPourSandUnit slice (500,0)
+  if abyss then (units, newSlice) else doPourSand (units + 1) newSlice
+
+doPourSandUnit :: Slice -> Coords -> (Slice, Bool)  -- Bool - True = sand is falling into abyss, False = sand comes to rest
+doPourSandUnit slice sandUnit
+  | snd sandUnit > (Map.keys slice |> maximum) = (slice, True)  -- done, reached abyss
+  | not (Map.member (snd sandUnit + 1) slice) = doPourSandUnit slice (fst sandUnit, snd sandUnit + 1) -- not yet abyss, but no rocks on this level, fall down
+  | not (Set.member (fst sandUnit) (slice Map.! (snd sandUnit + 1))) = doPourSandUnit slice (fst sandUnit, snd sandUnit + 1)
+  | not (Set.member (fst sandUnit - 1) (slice Map.! (snd sandUnit + 1))) = doPourSandUnit slice (fst sandUnit - 1, snd sandUnit + 1)
+  | not (Set.member (fst sandUnit + 1) (slice Map.! (snd sandUnit + 1))) = doPourSandUnit slice (fst sandUnit + 1, snd sandUnit + 1)
+  | otherwise = (addCoords slice sandUnit, False) -- sand at rest, abyss not reached
 
 day14_2 :: [String] -> Int
 day14_2 _ = undefined
