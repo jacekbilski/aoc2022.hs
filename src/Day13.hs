@@ -66,6 +66,7 @@ doFindMatchingBracket (c : cx) bracketsToFind idx
   | c == '[' = doFindMatchingBracket cx (bracketsToFind + 1) (idx + 1)
   | c == ']' = doFindMatchingBracket cx (bracketsToFind - 1) (idx + 1)
   | otherwise = doFindMatchingBracket cx bracketsToFind (idx + 1)
+doFindMatchingBracket _ _ _ = error "Unsupported input in doFindMatchingBracket"
 
 isRightOrder :: D -> D -> Maybe Bool
 isRightOrder (N l) (N r)
