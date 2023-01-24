@@ -1,23 +1,37 @@
 module Day13 (day13_1, day13_2) where
 
+import Data.List (elemIndex, sort)
 import Data.List.Split (chunksOf)
 import Data.Maybe (fromJust)
 import Flow
 
 data D = N Int | L [D]
+  deriving (Eq)
 
 type Packet = D
 
 type Pair = (Packet, Packet)
 
+firstDividerPacket :: Packet
+firstDividerPacket = parsePart "[[2]]"
+
+secondDividerPacket :: Packet
+secondDividerPacket = parsePart "[[6]]"
+
 instance Show D where
   show (N x) = show x
   show (L x) = show x
 
+instance Ord D where
+  compare l r
+    | isRightOrder l r == Just True = LT
+    | isRightOrder l r == Just False = GT
+    | otherwise = EQ
+
 day13_1 :: [String] -> Int
 day13_1 input = do
   let pairs = parseInput input
-  map (uncurry isRightOrder) pairs |> map fromJust |> zip [1..] |> filter snd |> map fst |> sum
+  map (uncurry isRightOrder) pairs |> map fromJust |> zip [1 ..] |> filter snd |> map fst |> sum
 
 parseInput :: [String] -> [Pair]
 parseInput input = chunksOf 3 input |> map parsePair
@@ -58,7 +72,7 @@ isRightOrder (N l) (N r)
   | l < r = Just True
   | l > r = Just False
   | otherwise = Nothing
-isRightOrder (L (l:lx)) (L (r:rx)) = do
+isRightOrder (L (l : lx)) (L (r : rx)) = do
   let inOrder = isRightOrder l r
   case inOrder of
     Just b -> Just b
@@ -70,4 +84,10 @@ isRightOrder (L l) (N r) = isRightOrder (L l) (L [N r])
 isRightOrder (N l) (L r) = isRightOrder (L [N l]) (L r)
 
 day13_2 :: [String] -> Int
-day13_2 _ = undefined
+day13_2 input = do
+  let pairs = parseInput input
+  let withDividerPackets = (firstDividerPacket, secondDividerPacket) : pairs
+  let sorted = foldl (\a p -> fst p : snd p : a) [] withDividerPackets |> sort
+  let firstDividerIndex = elemIndex firstDividerPacket sorted
+  let secondDividerIndex = elemIndex secondDividerPacket sorted
+  (fromJust firstDividerIndex + 1) * (fromJust secondDividerIndex + 1)
