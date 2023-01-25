@@ -29,7 +29,7 @@ library
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
-    build-depends:    base>=4, flow, split, containers
+    build-depends:    base>=4, flow, split, containers, regex-tdfa^>=1.3.2
     hs-source-dirs:   src
     default-language: GHC2021
     ghc-options: -Wall
