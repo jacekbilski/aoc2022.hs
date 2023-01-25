@@ -61,5 +61,5 @@ test_aoc = testGroup "Advent of Code 2022" [
    ,labeledDayTestCase "day 14 part 1" day14_1 "inputs/day14.input" 888
    ,labeledDayTestCase "day 14 part 2" day14_2 "inputs/day14.input" 26461
    ,labeledDayTestCase "day 15 part 1" day15_1 "inputs/day15.input" 5040643
-   ,labeledDayTestCase "day 15 part 2" day15_2 "inputs/day15.input" (-1)
+   ,labeledDayTestCase "day 15 part 2" day15_2 "inputs/day15.input" 11016575214126
   ]

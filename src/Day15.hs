@@ -64,11 +64,32 @@ doSubtractBeacon b done ((s, e):rs)
   | b > s && b < e = done ++ [(s, b - 1), (b + 1, e)] ++ rs
   | otherwise = doSubtractBeacon b (done ++ [(s, e)]) rs
 
-day15_2 :: [String] -> Int
+day15_2 :: [String] -> Integer
 day15_2 input = do
   let maxCoord = 4000000 :: Int
   let (sensors, _) = parseInput input
-  let farEnough = \(c :: Coords) -> all (\(sc, r) -> r < distance sc c) sensors
-  let possibleLocations = [(x, y) | x <- [0..maxCoord], y <- [0..maxCoord]] |> filter farEnough
-  let beaconLocation = head possibleLocations -- should be just one
-  4000000 * fst beaconLocation + snd beaconLocation
+  let mapRanges = \row -> map (rangeAtRow row) sensors |> filter isJust |> map fromJust |> sortBy (\x y -> compare (fst x) (fst y)) |> foldl mergeRanges [] |> cutTo (0, maxCoord)
+  let ranges = map (\row -> (row, mapRanges row)) [0..maxCoord]
+  let notFullyCovered = filter (\t -> (snd t |> head) /= (0, maxCoord)) ranges |> head
+  let x = (head (snd notFullyCovered) |> snd) + 1
+  (4000000 :: Integer) * toInteger x + toInteger (fst notFullyCovered)  -- 12856506754143 is too high
+
+cutTo :: Range -> [Range] -> [Range]
+cutTo (s, e) ranges = cutStartTo s ranges |> cutEndTo e
+
+cutStartTo :: Int -> [Range] -> [Range]
+cutStartTo s ((rs, re):rest)
+  | s <= rs = (rs, re):rest
+  | s <= re = (s, re):rest
+  | otherwise = cutStartTo s rest
+cutStartTo _ _ = error "Can't go that far"
+
+cutEndTo :: Int -> [Range] -> [Range]
+cutEndTo e = doCutEndTo e []
+
+doCutEndTo :: Int -> [Range] -> [Range] -> [Range]
+doCutEndTo e done ((rs, re):rest)
+  | e < rs = done
+  | e > re = doCutEndTo e (done ++ [(rs, re)]) rest
+  | otherwise = done ++ [(rs, e)]
+doCutEndTo _ _ _ = error "Can't go that far"
