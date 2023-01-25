@@ -66,4 +66,9 @@ doSubtractBeacon b done ((s, e):rs)
 
 day15_2 :: [String] -> Int
 day15_2 input = do
-  undefined
+  let maxCoord = 4000000 :: Int
+  let (sensors, _) = parseInput input
+  let farEnough = \(c :: Coords) -> all (\(sc, r) -> r < distance sc c) sensors
+  let possibleLocations = [(x, y) | x <- [0..maxCoord], y <- [0..maxCoord]] |> filter farEnough
+  let beaconLocation = head possibleLocations -- should be just one
+  4000000 * fst beaconLocation + snd beaconLocation
