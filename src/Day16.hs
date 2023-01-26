@@ -1,7 +1,7 @@
 module Day16 (day16_1, day16_2) where
 
 import Data.List.Split (splitOn)
-import Data.Maybe (isJust, listToMaybe)
+import Data.Maybe (fromJust, isJust, listToMaybe, mapMaybe)
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
 import Flow
@@ -19,7 +19,7 @@ day16_1 :: [String] -> Int
 day16_1 input = do
   let cave = parseInput input
   let zeroFlowValves = Map.toList (snd cave) |> filter (\(v, f) -> f == 0 && v /= "AA") |> map fst
-  let reducedCave = foldl removeZeroFlowValve cave zeroFlowValves
+  let reducedCave = foldl removeValve cave zeroFlowValves
 --  error (show (fst reducedCave))
 --  error (show (map (\v -> length (fst cave Map.! v)) (Map.keys (fst cave)) |> sum))
   let maxPressure = openValves reducedCave
@@ -39,8 +39,8 @@ parseValve input = do
   let tunnels = splitOn ", " (parsed !! 3)
   (valve, flow, tunnels)
 
-removeZeroFlowValve :: Cave -> Valve -> Cave
-removeZeroFlowValve (tunnels, flows) valveToRemove = do
+removeValve :: Cave -> Valve -> Cave
+removeValve (tunnels, flows) valveToRemove = do
   let tunnelsTo :: [Tunnel] = Map.toList tunnels |> map (\(from, tunnel) -> (from, filter (\(v, _) -> v == valveToRemove) tunnel |> listToMaybe)) |> filter (isJust . snd) |> map (\(from, Just (_, distance)) -> (from, distance))
   let tunnelsFrom = tunnels Map.! valveToRemove
   let newTunnels = foldl (\acc tunnel -> replaceTunnels acc valveToRemove tunnel tunnelsTo) tunnels tunnelsFrom
@@ -54,21 +54,22 @@ replaceTunnels tunnels valveToRemove (fromValve, fromDistance) toValves =
 -- at every valve calculate max pressure for all possible routes starting here with and without opening this valve
 -- take max and return
 openValves :: Cave -> Int
-openValves cave = doOpenValves cave "AA" 20 []
+openValves cave = fromJust (doOpenValves cave "AA" 20 [])
 
-doOpenValves :: Cave -> Valve -> Int -> [Valve] -> Int
+doOpenValves :: Cave -> Valve -> Int -> [Valve] -> Maybe Int
 -- cave -> current position -> minutes left -> opened valves -> max pressure possible to release
 doOpenValves (tunnels, flows) currentValve minutesLeft openedValves
-  | minutesLeft <= 0 = 0
+  | minutesLeft <= 0 = Just 0
   | otherwise = do
-    let maxWithoutOpening = map (\(v, d) -> doOpenValves (tunnels, flows) v (minutesLeft - d) openedValves) (tunnels Map.! currentValve) |> maximum
-    let maxWithOpening = if (currentValve `elem` openedValves) || (flows Map.! currentValve == 0)
-        then 0 -- current valve is already open or its flow is 0, maxWithoutOpening already includes best available solution
+    let withoutOpening = mapMaybe (\(v, d) -> doOpenValves (tunnels, flows) v (minutesLeft - d) openedValves) (tunnels Map.! currentValve)
+    let withOpening = if currentValve `elem` openedValves
+        then [] -- current valve is already open or its flow is 0, maxWithoutOpening already includes best available solution
         else do
           let pressureReleasedHere = (minutesLeft - 1) * (flows Map.! currentValve)
-          let furtherValves = map (\(v, d) -> doOpenValves (tunnels, flows) v (minutesLeft - d - 1) (currentValve:openedValves)) (tunnels Map.! currentValve) |> maximum
-          pressureReleasedHere + furtherValves
-    max maxWithoutOpening maxWithOpening
+          let furtherValves = mapMaybe (\(v, d) -> doOpenValves (removeValve (tunnels, flows) currentValve) v (minutesLeft - d - 1) (currentValve:openedValves)) (tunnels Map.! currentValve)
+          map (pressureReleasedHere + ) furtherValves
+    let allPossibilities = withoutOpening ++ withOpening
+    if null allPossibilities then Nothing else Just (maximum allPossibilities)
 
 day16_2 :: [String] -> Int
 day16_2 input = do
