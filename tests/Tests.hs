@@ -62,6 +62,18 @@ test_aoc = testGroup "Advent of Code 2022" [
    ,labeledDayTestCase "day 14 part 2" day14_2 "inputs/day14.input" 26461
    ,labeledDayTestCase "day 15 part 1" day15_1 "inputs/day15.input" 5040643
 --   ,labeledDayTestCase "day 15 part 2" day15_2 "inputs/day15.input" 11016575214126  -- takes over 2 seconds
-   ,labeledDayTestCase "day 16 part 1" day16_1 "inputs/day16.input" (-1)
-   ,labeledDayTestCase "day 16 part 2" day16_2 "inputs/day16.input" (-1)
+--   ,labeledDayTestCase "day 16 part 1" day16_1 "inputs/day16.input" (-1)
+--   ,labeledDayTestCase "day 16 part 2" day16_2 "inputs/day16.input" (-1)
+   ,labeledDayExampleTestCase "day 16 case 1" day16_1 [
+    "Valve AA has flow rate=0; tunnels lead to valves DD, II, BB",
+    "Valve BB has flow rate=13; tunnels lead to valves CC, AA",
+    "Valve CC has flow rate=2; tunnels lead to valves DD, BB",
+    "Valve DD has flow rate=20; tunnels lead to valves CC, AA, EE",
+    "Valve EE has flow rate=3; tunnels lead to valves FF, DD",
+    "Valve FF has flow rate=0; tunnels lead to valves EE, GG",
+    "Valve GG has flow rate=0; tunnels lead to valves FF, HH",
+    "Valve HH has flow rate=22; tunnel leads to valve GG",
+    "Valve II has flow rate=0; tunnels lead to valves AA, JJ",
+    "Valve JJ has flow rate=21; tunnel leads to valve II"
+   ] 1651
   ]
